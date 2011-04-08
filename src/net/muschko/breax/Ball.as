@@ -1,27 +1,41 @@
 package net.muschko.breax {
-	import flash.events.Event;
 	/**
+	 * Ballinstanz
 	 * @author muschko
 	 */
-	public class Ball extends BallAsset{
-		
-		private var speed:int;
-		private var xspeed:int;
-		private var yspeed:int;		
-		
-		public function Ball(speed:int) {
+	public class Ball extends BallAsset {
+		private var speed : int;
+		private var xspeed: int;
+		private var yspeed: int;
+
+		public function Ball(speed : int) {
 			this.speed = speed;
 		}
-		
-		public function moveBall(e:Event):void {
-			
-			this.x +=speed;
-			this.y +=speed;
-			
-			xspeed = speed * Math.cos((45) * Math.PI / 180);
-			yspeed = speed * Math.sin((45) * Math.PI / 180);		
-		
+
+		public function getSpeed() : int {
+			return speed;
 		}
+
+		public function setSpeed(speed : int) : void {
+			this.speed = speed;
+		}
+
+		public function getXspeed() : int {
+			return xspeed;
+		}
+
+		public function setXspeed(xspeed : int) : void {
+			this.xspeed = xspeed;
+		}
+
+		public function getYspeed() : int {
+			return yspeed;
+		}
+
+		public function setYspeed(yspeed : int) : void {
+			this.yspeed = yspeed;
+		}
+		
 		
 	}
 }

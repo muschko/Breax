@@ -10,8 +10,6 @@ package net.muschko.breax {
 	 */
 	public class Game extends MovieClip{
 		
-		private const LIFE_COUNT:int = 3;
-		
 		private var score:int;
 		private var lifes:Array = new Array(new LifeAsset(),new LifeAsset(), new LifeAsset());
 		private var paddle:Paddle;
@@ -67,11 +65,28 @@ package net.muschko.breax {
 		
 		private function kickBall(e:Event):void {
 			firstKick = false;
+			
+			this.addEventListener(Event.ENTER_FRAME, frameScript);
 		}
 		
 		private function placeBallonPaddle(e:Event):void {
 			ball.x = paddle.x+paddle.width/2;
 			ball.y = paddle.y-ball.height/2;
+		}
+		
+		private function frameScript(e:Event):void {
+
+					
+			ball.x += ball.getSpeed();
+			ball.y += ball.getSpeed();
+			
+			if (ball.hitTestObject(paddle)) {
+				
+			}
+			var xspeed = ball.getSpeed() * Math.cos((45) * Math.PI / 180);
+			var yspeed = ball.getSpeed() * Math.sin((45) * Math.PI / 180);		
+		
+				
 		}
 	}
 }
