@@ -1,5 +1,5 @@
 ﻿package 
-net.muschko.breax{
+net.muschko.breax {
 	import flash.events.Event;
 	import flash.display.MovieClip;
 
