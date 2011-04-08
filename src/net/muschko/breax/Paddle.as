@@ -15,7 +15,7 @@ package net.muschko.breax {
 		}
 		
 		public function movePaddle(e:Event):void {
-			
+
 			var endX:int = stage.mouseX;
 						
 			if (stage.mouseX > stage.width / 2) {
