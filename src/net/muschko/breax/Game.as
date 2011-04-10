@@ -18,6 +18,8 @@ package net.muschko.breax {
 		private var paddle:Paddle;
 		private var ball:Ball;
 		private var firstKick:Boolean = true;
+		private var currentLevel:int = 1;
+		private var level:Level;
 							
 		public function Game() {
 		}
@@ -75,6 +77,12 @@ package net.muschko.breax {
 			scoreTextField.text = score.toString();
 			
 			addChild(scoreTextField);
+			
+			//Level erstellten
+			level = new Level();
+			addChild(level);
+			
+			level.createLevel(1);
 			
 			// First kick
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);

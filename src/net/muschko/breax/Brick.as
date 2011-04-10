@@ -9,24 +9,42 @@ package net.muschko.breax {
 		private static const HEIGHT:int = 20;
 		private static const WIDTH:int = 30;
 		private var destructable:Boolean = true;
+		private var positionX:int;
+		private var positionY:int;
 		
 		public function Brick() {
 		}
 
-		static public function get _HEIGHT() : int {
+		public function getHEIGHT() : int {
 			return HEIGHT;
 		}
 
-		static public function get _WIDTH() : int {
+		public function getWIDTH() : int {
 			return WIDTH;
 		}
 
-		public function get _destructable() : Boolean {
+		public function getDestructable() : Boolean {
 			return destructable;
 		}
 
-		public function set _destructable(destructable : Boolean) : void {
+		public function setDestructable(destructable : Boolean) : void {
 			this.destructable = destructable;
+		}
+
+		public function getPositionX() : int {
+			return positionX;
+		}
+
+		public function setPositionX(positionX : int) : void {
+			this.positionX = positionX;
+		}
+
+		public function getPositionY() : int {
+			return positionY;
+		}
+
+		public function setPositionY(positionY : int) : void {
+			this.positionY = positionY;
 		}
 		
 		
