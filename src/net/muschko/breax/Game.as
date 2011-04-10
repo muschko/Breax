@@ -14,6 +14,7 @@ package net.muschko.breax {
 		
 		public var score:int;
 		private var scoreTextField:TextField;
+		private var levelNameTextField:TextField;
 		private var lifes:Array = new Array(new LifeAsset(),new LifeAsset(), new LifeAsset());
 		private var paddle:Paddle;
 		private var ball:Ball;
@@ -63,8 +64,9 @@ package net.muschko.breax {
 								
 			}
 			
-			// Score erstellen
+			// Score & Levelname erstellen
 			scoreTextField = new TextField();
+			levelNameTextField = new TextField();
 			
 			var format1:TextFormat = new TextFormat(); 
 			format1.color = 0x333333; 
@@ -80,9 +82,10 @@ package net.muschko.breax {
 			
 			//Level erstellten
 			level = new Level();
-			addChild(level);
-			
+			addChild(level);			
+			level.alpha = 0;
 			level.createLevel(1);
+			TweenMax.to(level, 0.5, {alpha: 1});
 			
 			// First kick
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
@@ -110,8 +113,17 @@ package net.muschko.breax {
 		private function frameScript(e:Event):void {
 							
 			ball.x += ball.getXspeed();
-			ball.y += ball.getYspeed();
-				
+			ball.y += ball.getYspeed();			
+					
+			if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width/2) {
+				ball.setXspeed(-(ball.getXspeed()));		
+			} else if (ball.y <= ball.height/2) {
+				ball.setYspeed(-(ball.getYspeed()));
+			} else if (ball.y >= stage.stageHeight + ball.height) {
+				// Leben verlieren
+				this.removeEventListener(Event.ENTER_FRAME, frameScript);
+				dispatchEvent(new Event("lostLife"));
+			} 
 			if (paddle.hitTestObject(ball)) {
 				 
 				// 5 Punkte für Pedal
@@ -133,16 +145,31 @@ package net.muschko.breax {
                    ball.setXspeed(-(ball.getXspeed()));
                 }
 									
-			} else if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width/2) {
-				ball.setXspeed(-(ball.getXspeed()));		
-			} else if (ball.y <= ball.height/2) {
-				ball.setYspeed(-(ball.getYspeed()));
-			} else if (ball.y >= stage.stageHeight + ball.height) {
-				// Leben verlieren
-				this.removeEventListener(Event.ENTER_FRAME, frameScript);
-				dispatchEvent(new Event("lostLife"));
+			}else {
+				
+				for(var i:int = 0; i<=level.getBricks().length-1; i++) {
+					
+					var brick:Brick = level.getBricks()[i];
+					
+					if (ball.hitTestObject(brick)) {
+						
+						ball.setYspeed(-(ball.getYspeed()));
+						
+						if ( brick.getDestructable()) {
+							TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: 20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
+							level.getBricks().splice(level.getBricks().indexOf(brick),1);
+							score = score + brick.getScore();
+							scoreTextField.text = score.toString();
+							break;
+						}
+						// Falls power up hier unterdrücken: ball.setYspeed(-(ball.getYspeed()));	
+					}
+				}
+				
 			}
+			 
 		}
+		
 		
 		private function lifeLost(e:Event):void {
 			TweenMax.to(paddle,0.3,{alpha:0});
@@ -168,6 +195,10 @@ package net.muschko.breax {
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
+		}
+		
+		private function removeBrickChild(brick:Brick):void {
+			level.removeChild(brick);
 		}
 	}
 }

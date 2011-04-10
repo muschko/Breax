@@ -56,16 +56,42 @@ package net.muschko.breax {
                 	
                 		var brick1:Brick = setBrickPosition(i); 
                 		brick1.gotoAndStop(1);
+                		brick1.setScore(25);
                 		break;
                 		
                 	case "brick2":
                 	
                 		var brick2:Brick = setBrickPosition(i); 
                 		brick2.gotoAndStop(2);
+                		brick2.setScore(25);
+                		break;
+                	case "brick3":
+                	
+                		var brick3:Brick = setBrickPosition(i); 
+                		brick3.gotoAndStop(3);
+                		brick3.setScore(25);
+                		break;
+                	case "brick4":
+                	
+                		var brick4:Brick = setBrickPosition(i); 
+                		brick4.gotoAndStop(4);
+                		brick4.setScore(25);
+                		break;
+                	case "brick5":
+                	
+                		var brick5:Brick = setBrickPosition(i); 
+                		brick5.gotoAndStop(5);
+                		brick5.setScore(25);
+                		break;
+                	case "brick6":
+                	
+                		var brick6:Brick = setBrickPosition(i); 
+                		brick6.gotoAndStop(6);
+                		brick6.setScore(0);
+                		brick6.setDestructable(false);
                 		break;
            
-                }
-                    		    					
+                }                    		    					
 				rowCounter = rowCounter + 1;
             } 			
 			

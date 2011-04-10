@@ -11,6 +11,7 @@ package net.muschko.breax {
 		private var destructable:Boolean = true;
 		private var positionX:int;
 		private var positionY:int;
+		private var score:int;
 		
 		public function Brick() {
 		}
@@ -45,6 +46,14 @@ package net.muschko.breax {
 
 		public function setPositionY(positionY : int) : void {
 			this.positionY = positionY;
+		}
+
+		public function getScore() : int {
+			return score;
+		}
+
+		public function setScore(score : int) : void {
+			this.score = score;
 		}
 		
 		
