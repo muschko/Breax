@@ -8,6 +8,7 @@ net.muschko.breax {
 	public class Breax extends MovieClip
 	{
 		private var titleScreen:TitleAsset;
+		private var gameOverScreen:GameOverAsset;
 		private var game:Game;
 		
 		static private const TITLE_SCREEN:String = "title";
@@ -23,8 +24,7 @@ net.muschko.breax {
 		private function initBreax():void {
 			addEventListener(TITLE_SCREEN, setupTitle);
 			addEventListener(GAME_SCREEN, setupGame);
-			addEventListener(GAME_OVER_SCREEN, setupGameOver);
-			
+								
 			dispatchEvent(new Event(TITLE_SCREEN));		
 		}
 		
@@ -53,12 +53,24 @@ net.muschko.breax {
 			
 			game = new Game();
 			addChild(game);
+			game.addEventListener(GAME_OVER_SCREEN, setupGameOver);			
 			
 			game.init();
 
 		}
 		
-		public function setupGameOver(e:Event):void {			
+		public function setupGameOver(e:Event):void {
+			
+			gameOverScreen = new GameOverAsset();
+			addChild(gameOverScreen);
+			
+			gameOverScreen.txtGameOverScore.text = game.score.toString();
+			gameOverScreen.alpha = 0;
+			
+			//TODO Listener von Game zurücsetzen etc
+			TweenMax.to(gameOverScreen, 0.5, {alpha:1});
+			
+			
 		}
 		
 		private function newGame(e:Event):void {
@@ -66,10 +78,10 @@ net.muschko.breax {
 		}
 		
 		private function menuMouseOver(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.5, {alpha:0.5});	
+			TweenMax.to(e.currentTarget, 0.5, {alpha:0.5, x: e.currentTarget.x + 10});	
 		}
 		private function menuMouseOut(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.5, {alpha:1});	
+			TweenMax.to(e.currentTarget, 0.5, {alpha:1, x: 115});	
 		}
 		
 		private function dispatchEventWithParam(event:String):void {

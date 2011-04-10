@@ -1,4 +1,6 @@
 package net.muschko.breax {
+	import flash.text.TextFormat;
+	import flash.text.TextField;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
 	import com.greensock.TweenMax;
@@ -10,7 +12,8 @@ package net.muschko.breax {
 	 */
 	public class Game extends MovieClip{
 		
-		private var score:int;
+		public var score:int;
+		private var scoreTextField:TextField;
 		private var lifes:Array = new Array(new LifeAsset(),new LifeAsset(), new LifeAsset());
 		private var paddle:Paddle;
 		private var ball:Ball;
@@ -27,13 +30,16 @@ package net.muschko.breax {
 			
 			paddle.alpha = 0;
 			paddle.x = stage.stageWidth/2 - paddle.width /2;
-			paddle.y = stage.stageHeight - paddle.height;
+			paddle.y = stage.stageHeight - paddle.height - 5;
 			TweenMax.to(paddle,0.5,{alpha:1});
 			
 			// Ball erstellen
 			ball = new Ball(5);
 			addChild(ball);
 			
+			ball.setXspeed(ball.getSpeed() * Math.cos((300) * Math.PI / 180));
+			ball.setYspeed(ball.getSpeed() * Math.sin((300) * Math.PI / 180));			
+	
 			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			
 			// Leben erstellen
@@ -55,8 +61,26 @@ package net.muschko.breax {
 								
 			}
 			
+			// Score erstellen
+			scoreTextField = new TextField();
+			
+			var format1:TextFormat = new TextFormat(); 
+			format1.color = 0x333333; 
+			format1.size = 20;
+			format1.font = "Helvetica";
+			
+			scoreTextField.defaultTextFormat = format1;
+			scoreTextField.x = 12;
+			scoreTextField.y = stage.stageHeight - 65;
+			scoreTextField.text = score.toString();
+			
+			addChild(scoreTextField);
+			
 			// First kick
-			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);			
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
+			
+			// Listener für Lebensverlust
+			this.addEventListener("lostLife", lifeLost);		
 		}
 		
 		private function createLevel():void {
@@ -65,28 +89,77 @@ package net.muschko.breax {
 		
 		private function kickBall(e:Event):void {
 			firstKick = false;
+			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			
 			this.addEventListener(Event.ENTER_FRAME, frameScript);
 		}
 		
 		private function placeBallonPaddle(e:Event):void {
 			ball.x = paddle.x+paddle.width/2;
-			ball.y = paddle.y-ball.height/2;
+			ball.y = paddle.y-ball.height/2-3;
 		}
 		
 		private function frameScript(e:Event):void {
+							
+			ball.x += ball.getXspeed();
+			ball.y += ball.getYspeed();
+				
+			if (paddle.hitTestObject(ball)) {
+				 
+				// 5 Punkte für Pedal
+				score = score + 5;
+				scoreTextField.text = score.toString(); 
+				 
+				ball.setYspeed(-(ball.getYspeed()));
 
-					
-			ball.x += ball.getSpeed();
-			ball.y += ball.getSpeed();
-			
-			if (ball.hitTestObject(paddle)) {
-				
+                var pixelsLeftRight:int = 25;
+                
+                if ((ball.x > (paddle.x + paddle.width - pixelsLeftRight)) && (ball.getXspeed() < 0)) {
+                    // : Impact auf der rechten "Kante" und Ball kam von rechts
+                    // : X Richtung umdrehen
+                    ball.setXspeed(-(ball.getXspeed()));
+                } else
+                if ((ball.x + ball.width <= paddle.x + pixelsLeftRight) && (ball.getXspeed() > 0)) {
+                    // : Impact auf der linken "Kante" und Ball kam von links
+                    // : X Richtung umdrehen
+                   ball.setXspeed(-(ball.getXspeed()));
+                }
+									
+			} else if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width/2) {
+				ball.setXspeed(-(ball.getXspeed()));		
+			} else if (ball.y <= ball.height/2) {
+				ball.setYspeed(-(ball.getYspeed()));
+			} else if (ball.y >= stage.stageHeight + ball.height) {
+				// Leben verlieren
+				this.removeEventListener(Event.ENTER_FRAME, frameScript);
+				dispatchEvent(new Event("lostLife"));
 			}
-			var xspeed = ball.getSpeed() * Math.cos((45) * Math.PI / 180);
-			var yspeed = ball.getSpeed() * Math.sin((45) * Math.PI / 180);		
+		}
 		
-				
+		private function lifeLost(e:Event):void {
+			TweenMax.to(paddle,0.3,{alpha:0});
+			TweenMax.to(ball,0.3,{alpha:0});
+			trace("lost life");
+			
+			if (lifes.length != 0) {
+				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewGame});
+				lifes.splice(lifes.length-1);
+			} else {
+				scoreTextField.text = "";
+				dispatchEvent(new Event("gameover"));
+			}
+						
+		}
+		
+		private function prepareNewGame():void {
+			TweenMax.to(paddle,0.3,{alpha:1});
+			TweenMax.to(ball,0.3,{alpha:1});
+			
+			ball.setXspeed(ball.getSpeed() * Math.cos((300) * Math.PI / 180));
+			ball.setYspeed(ball.getSpeed() * Math.sin((300) * Math.PI / 180));
+			
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
+			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 		}
 	}
 }
