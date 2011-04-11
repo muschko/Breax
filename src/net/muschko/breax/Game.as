@@ -1,4 +1,5 @@
 package net.muschko.breax {
+	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
 	import flash.text.TextField;
 	import flash.events.MouseEvent;
@@ -102,12 +103,12 @@ package net.muschko.breax {
 			firstKick = false;
 			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			
-			this.addEventListener(Event.ENTER_FRAME, frameScript);
+			this.addEventListener(Event.ENTER_FRAME, frameScript, false, 0, true);
 		}
 		
 		private function placeBallonPaddle(e:Event):void {
-			ball.x = paddle.x+paddle.width/2;
-			ball.y = paddle.y-ball.height/2-3;
+			ball.x = paddle.x+paddle.width/2-ball.width/2;
+			ball.y = paddle.y-ball.height-2;
 		}
 		
 		private function frameScript(e:Event):void {
@@ -124,7 +125,7 @@ package net.muschko.breax {
 				this.removeEventListener(Event.ENTER_FRAME, frameScript);
 				dispatchEvent(new Event("lostLife"));
 			} 
-			if (paddle.hitTestObject(ball)) {
+			if (paddle.hitTestPoint(ball.x, ball.y+ball.height, true)) {
 				 
 				// 5 Punkte für Pedal
 				score = score + 5;
@@ -145,31 +146,60 @@ package net.muschko.breax {
                    ball.setXspeed(-(ball.getXspeed()));
                 }
 									
-			}else {
+			} 
+			
+			var ballRect:Rectangle;
+			var brickRect:Rectangle;
+			
+			ballRect = ball.getRect(this);
+			
+			for(var i:int = 0; i<=level.getBricks().length-1; i++) {
 				
-				for(var i:int = 0; i<=level.getBricks().length-1; i++) {
-					
-					var brick:Brick = level.getBricks()[i];
-					
-					if (ball.hitTestObject(brick)) {
+				var brick:Brick = level.getBricks()[i];
+				
+				brickRect = brick.getRect(this);					
+
+				if (ball.hitTestObject(brick)) {							
+											
+					if ( brick.getDestructable()) {
+						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
+						level.getBricks().splice(level.getBricks().indexOf(brick),1);
+						score = score + brick.getScore();
+						scoreTextField.text = score.toString();								
 						
-						ball.setYspeed(-(ball.getYspeed()));
-						
-						if ( brick.getDestructable()) {
-							TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: 20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
-							level.getBricks().splice(level.getBricks().indexOf(brick),1);
-							score = score + brick.getScore();
-							scoreTextField.text = score.toString();
+						if (ball.x < brickRect.left || ball.x+ball.width > brickRect.right) {
+							trace("left or right");
+							ball.setXspeed(-(ball.getXspeed()));
+							break;									
+						} else {								
+							ball.setYspeed(-(ball.getYspeed()));
 							break;
-						}
-						// Falls power up hier unterdrücken: ball.setYspeed(-(ball.getYspeed()));	
-					}
+						}	
+						
+						break;
+					} else {
+							trace(brickRect.right + " "+ball.x);
+							if (ball.x < brickRect.left) {
+								trace("left");
+								ball.x = brickRect.left-ball.width;
+								ball.setXspeed(-(ball.getXspeed()));
+								break;									
+							} else if( ball.x-ball.width > brickRect.right){
+								trace("right");
+								//ball.x = brickRect.right+ball.width;
+								ball.setXspeed(-(ball.getXspeed()));
+								break;
+							}
+							 else {								
+								ball.setYspeed(-(ball.getYspeed()));
+								break;
+							}
+						}				
+					
 				}
-				
-			}
+			}			
 			 
-		}
-		
+		}		
 		
 		private function lifeLost(e:Event):void {
 			TweenMax.to(paddle,0.3,{alpha:0});

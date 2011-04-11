@@ -105,9 +105,7 @@ package net.muschko.breax {
 			if (rowCounter == 20) {
 				rowBreak = true;
 			} 
-			
-			trace(counter);
-			   		
+		
     		// Position X für den Stein
     		if (counter != 0 && !rowBreak) {
     			brick.setPositionX(brick.getWIDTH() + bricks[counter-1].getPositionX() + 1);
