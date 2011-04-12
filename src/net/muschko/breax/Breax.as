@@ -67,10 +67,9 @@ net.muschko.breax {
 			gameOverScreen.txtGameOverScore.text = game.score.toString();
 			gameOverScreen.alpha = 0;
 			
-			//TODO Listener von Game zurücsetzen etc
 			TweenMax.to(gameOverScreen, 0.5, {alpha:1});
 			
-			
+			stage.addEventListener(MouseEvent.CLICK, backToTitle);
 		}
 		
 		private function newGame(e:Event):void {
@@ -78,10 +77,19 @@ net.muschko.breax {
 		}
 		
 		private function menuMouseOver(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.5, {alpha:0.5, x: e.currentTarget.x + 10});	
+			TweenMax.to(e.currentTarget, 0.2, {alpha:0.5, x: e.currentTarget.x + 10});	
 		}
 		private function menuMouseOut(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.5, {alpha:1, x: 115});	
+			TweenMax.to(e.currentTarget, 0.2, {alpha:1, x: 115});	
+		}
+		private function backToTitle(e:Event):void {
+			
+			stage.removeEventListener(MouseEvent.CLICK, backToTitle);
+			
+			removeChild(gameOverScreen);
+			removeChild(game);
+			
+			dispatchEvent(new Event(TITLE_SCREEN));
 		}
 		
 		private function dispatchEventWithParam(event:String):void {

@@ -11,7 +11,7 @@ package net.muschko.breax {
 		static private const friction:int = 5;
 		
 		public function Paddle() {
-			addEventListener(Event.ENTER_FRAME, movePaddle);
+			this.addEventListener(Event.ENTER_FRAME, movePaddle);
 		}
 		
 		public function movePaddle(e:Event):void {
@@ -34,6 +34,9 @@ package net.muschko.breax {
 			}
 			
 				
+		}
+		public function destroy():void {
+			this.removeEventListener(Event.ENTER_FRAME, movePaddle);
 		}
 	}
 }

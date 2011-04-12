@@ -19,6 +19,7 @@ package net.muschko.breax {
 		private var rowMax:int = 20;
 		private var rowCounter:int = 0;
 		private var rowBreak:Boolean;
+		private var levelName:String = new String();
 		
 		public function Level() {
 		}
@@ -31,6 +32,7 @@ package net.muschko.breax {
 		
 		private function loadLevelComplete(e:Event):void {
 			levelXML = new XML(e.target.data);
+			levelName = levelXML.attribute("name");
 			generateBricks();
 		}
 		
@@ -43,7 +45,7 @@ package net.muschko.breax {
       			
       			var brickType:String;
                 brickType = levelXML.children()[i].name();
-                
+                               
                 switch(brickType) {
                 	
                 	case "brick0":
@@ -138,6 +140,14 @@ package net.muschko.breax {
 
 		public function setBricks(bricks : Array) : void {
 			this.bricks = bricks;
+		}
+
+		public function getLevelName() : String {
+			return levelName;
+		}
+
+		public function setLevelName(levelName : String) : void {
+			this.levelName = levelName;
 		}
 		
 		

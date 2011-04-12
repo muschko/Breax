@@ -1,4 +1,7 @@
 package net.muschko.breax {
+	import flash.text.TextFieldAutoSize;
+	import com.greensock.easing.Quint;
+	import com.greensock.easing.Elastic;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
 	import flash.text.TextField;
@@ -72,21 +75,36 @@ package net.muschko.breax {
 			var format1:TextFormat = new TextFormat(); 
 			format1.color = 0x333333; 
 			format1.size = 20;
-			format1.font = "Helvetica";
+			format1.font = "Helvetica";			
 			
 			scoreTextField.defaultTextFormat = format1;
 			scoreTextField.x = 12;
 			scoreTextField.y = stage.stageHeight - 65;
 			scoreTextField.text = score.toString();
 			
-			addChild(scoreTextField);
+			addChild(scoreTextField);			
 			
 			//Level erstellten
 			level = new Level();
-			addChild(level);			
 			level.alpha = 0;
 			level.createLevel(1);
+			addChild(level);
+			
 			TweenMax.to(level, 0.5, {alpha: 1});
+			
+			// Levebeschreibung setzen
+			var format2:TextFormat = new TextFormat(); 
+			format2.color = 0x999999; 
+			format2.size = 12;
+			format2.font = "Helvetica";
+			
+			levelNameTextField.defaultTextFormat = format2;
+			levelNameTextField.x = 12;
+			levelNameTextField.y = stage.stageHeight - 80;
+			levelNameTextField.autoSize = TextFieldAutoSize.LEFT;
+			
+			trace("Level: " + level.getLevelName());
+			addChild(levelNameTextField);
 			
 			// First kick
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
@@ -109,14 +127,16 @@ package net.muschko.breax {
 		private function placeBallonPaddle(e:Event):void {
 			ball.x = paddle.x+paddle.width/2-ball.width/2;
 			ball.y = paddle.y-ball.height-2;
+			
+			levelNameTextField.text = level.getLevelName().toString();
 		}
 		
 		private function frameScript(e:Event):void {
-							
+
 			ball.x += ball.getXspeed();
 			ball.y += ball.getYspeed();			
 					
-			if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width/2) {
+			if (ball.x >= stage.stageWidth - ball.width || ball.x <= ball.width/2) {
 				ball.setXspeed(-(ball.getXspeed()));		
 			} else if (ball.y <= ball.height/2) {
 				ball.setYspeed(-(ball.getYspeed()));
@@ -162,13 +182,13 @@ package net.muschko.breax {
 				if (ball.hitTestObject(brick)) {							
 											
 					if ( brick.getDestructable()) {
+						
 						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
 						level.getBricks().splice(level.getBricks().indexOf(brick),1);
 						score = score + brick.getScore();
 						scoreTextField.text = score.toString();								
 						
 						if (ball.x < brickRect.left || ball.x+ball.width > brickRect.right) {
-							trace("left or right");
 							ball.setXspeed(-(ball.getXspeed()));
 							break;									
 						} else {								
@@ -178,24 +198,21 @@ package net.muschko.breax {
 						
 						break;
 					} else {
-							trace(brickRect.right + " "+ball.x);
-							if (ball.x < brickRect.left) {
-								trace("left");
-								ball.x = brickRect.left-ball.width;
-								ball.setXspeed(-(ball.getXspeed()));
-								break;									
-							} else if( ball.x-ball.width > brickRect.right){
-								trace("right");
-								//ball.x = brickRect.right+ball.width;
-								ball.setXspeed(-(ball.getXspeed()));
-								break;
-							}
-							 else {								
-								ball.setYspeed(-(ball.getYspeed()));
-								break;
-							}
-						}				
-					
+						if (ball.x < brickRect.left) {
+							trace("left");
+							ball.x = brickRect.left-ball.width;
+							ball.setXspeed(-(ball.getXspeed()));
+							break;									
+						} else if((ball.x+1 > Math.round(brickRect.right))){
+							trace("right");
+							ball.setXspeed(-(ball.getXspeed()));
+							break;
+						}
+						 else {								
+							ball.setYspeed(-(ball.getYspeed()));
+							break;
+						}
+					}					
 				}
 			}			
 			 
@@ -205,18 +222,23 @@ package net.muschko.breax {
 			TweenMax.to(paddle,0.3,{alpha:0});
 			TweenMax.to(ball,0.3,{alpha:0});
 			trace("lost life");
-			
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			if (lifes.length != 0) {
-				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewGame});
+				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewBall});
 				lifes.splice(lifes.length-1);
+				trace(lifes.length);
 			} else {
 				scoreTextField.text = "";
+				stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
+				this.removeEventListener(Event.ENTER_FRAME, frameScript);
+				paddle.destroy();
+				removeChild(ball);
 				dispatchEvent(new Event("gameover"));
 			}
 						
 		}
 		
-		private function prepareNewGame():void {
+		private function prepareNewBall():void {
 			TweenMax.to(paddle,0.3,{alpha:1});
 			TweenMax.to(ball,0.3,{alpha:1});
 			
