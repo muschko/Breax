@@ -198,12 +198,12 @@ package net.muschko.breax {
 						
 						break;
 					} else {
-						if (ball.x < brickRect.left) {
+						if (Math.round(ball.x-0.5) < Math.round(brickRect.left)) {
 							trace("left");
 							ball.x = brickRect.left-ball.width;
 							ball.setXspeed(-(ball.getXspeed()));
 							break;									
-						} else if((ball.x+1 > Math.round(brickRect.right))){
+						} else if((Math.round(ball.x+0.5) > Math.round(brickRect.right))){
 							trace("right");
 							ball.setXspeed(-(ball.getXspeed()));
 							break;
