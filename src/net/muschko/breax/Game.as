@@ -1,7 +1,5 @@
 package net.muschko.breax {
 	import flash.text.TextFieldAutoSize;
-	import com.greensock.easing.Quint;
-	import com.greensock.easing.Elastic;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
 	import flash.text.TextField;
@@ -9,6 +7,7 @@ package net.muschko.breax {
 	import flash.events.Event;
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
+	
 	/**
 	 * GameEngine für Brix
 	 * 
@@ -25,11 +24,16 @@ package net.muschko.breax {
 		private var firstKick:Boolean = true;
 		private var currentLevel:int = 1;
 		private var level:Level;
+		private var background:BackgroundAsset;
 							
 		public function Game() {
 		}
 		
 		public function init():void {
+			
+			// Background
+			background = new BackgroundAsset();
+			addChild(background);	
 			
 			// Paddle erstellen
 			paddle = new Paddle();
@@ -87,7 +91,7 @@ package net.muschko.breax {
 			//Level erstellten
 			level = new Level();
 			level.alpha = 0;
-			level.createLevel(1);
+			level.createLevel(currentLevel);
 			addChild(level);
 			
 			TweenMax.to(level, 0.5, {alpha: 1});
@@ -113,10 +117,6 @@ package net.muschko.breax {
 			this.addEventListener("lostLife", lifeLost);		
 		}
 		
-		private function createLevel():void {
-			
-		}
-		
 		private function kickBall(e:Event):void {
 			firstKick = false;
 			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
@@ -133,6 +133,7 @@ package net.muschko.breax {
 		
 		private function frameScript(e:Event):void {
 
+			// Ballbewegung
 			ball.x += ball.getXspeed();
 			ball.y += ball.getYspeed();			
 					
@@ -178,38 +179,65 @@ package net.muschko.breax {
 				var brick:Brick = level.getBricks()[i];
 				
 				brickRect = brick.getRect(this);					
-
-				if (ball.hitTestObject(brick)) {							
-											
+				
+				// Wenn der Ball einen Stein trifft
+				if (ballRect.intersects(brickRect)) {							
+					
+					// Wenn der Ball einen zerstörbaren Stein trifft						
 					if ( brick.getDestructable()) {
 						
+						// Stein entfernen
 						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
 						level.getBricks().splice(level.getBricks().indexOf(brick),1);
+						
+						// Punkte hinzufügen
 						score = score + brick.getScore();
 						scoreTextField.text = score.toString();								
 						
-						if (ball.x < brickRect.left || ball.x+ball.width > brickRect.right) {
-							ball.setXspeed(-(ball.getXspeed()));
-							break;									
-						} else {								
-							ball.setYspeed(-(ball.getYspeed()));
+						// Ball abprallen lassen
+						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x-ball.width/2, ballRect.bottom)) {
+							ball.setYspeed(-(ball.getYspeed()));						
 							break;
-						}	
+						} else if (brickRect.contains(ballRect.left, ballRect.y+1) || brickRect.contains(ballRect.right, ballRect.y+1)){
+							ball.setXspeed(-(ball.getXspeed()));	
+							break;
+						}						
 						
 						break;
-					} else {
-						if (Math.round(ball.x-0.5) < Math.round(brickRect.left)) {
-							trace("left");
-							ball.x = brickRect.left-ball.width;
-							ball.setXspeed(-(ball.getXspeed()));
-							break;									
-						} else if((Math.round(ball.x+0.5) > Math.round(brickRect.right))){
-							trace("right");
-							ball.setXspeed(-(ball.getXspeed()));
+					} 
+					// Wenn der Ball einen brechbaren Stein trifft
+					else if ( brick.getBreakable() ) {
+						 						 
+						 if (brick.currentFrame == 7) {
+						 	// Anderen Sprite anzeigen "brüchigen Stein"
+						 	brick.gotoAndStop(8);
+						 } else {
+						 	// Stein entfernen
+						 	TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
+							level.getBricks().splice(level.getBricks().indexOf(brick),1);
+							
+							// Punkte hinzufügen
+							score = score + brick.getScore();
+							scoreTextField.text = score.toString();	
+						 }						 
+						 
+						 // Ball abprallen lassen
+						 if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x-ball.width/2, ballRect.bottom)) {
+							ball.setYspeed(-(ball.getYspeed()));						
 							break;
-						}
-						 else {								
-							ball.setYspeed(-(ball.getYspeed()));
+						} else if (brickRect.contains(ballRect.left, ballRect.y+1) || brickRect.contains(ballRect.right, ballRect.y+1)){
+							ball.setXspeed(-(ball.getXspeed()));	
+							break;
+						}	
+					}
+					// Stein ist nicht zerstörbar!					
+					else {
+						// Ball abprallen lassen
+						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x, ballRect.bottom)) {
+							ball.setYspeed(-(ball.getYspeed()));						
+							break;
+						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
+							ball.setXspeed(-(ball.getXspeed()));	
 							break;
 						}
 					}					
@@ -219,10 +247,12 @@ package net.muschko.breax {
 		}		
 		
 		private function lifeLost(e:Event):void {
+			
 			TweenMax.to(paddle,0.3,{alpha:0});
 			TweenMax.to(ball,0.3,{alpha:0});
-			trace("lost life");
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
+			
+			// Check ob noch genug Leben verfügbar sind
 			if (lifes.length != 0) {
 				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewBall});
 				lifes.splice(lifes.length-1);
@@ -239,6 +269,8 @@ package net.muschko.breax {
 		}
 		
 		private function prepareNewBall():void {
+			
+			// Neuen Ball vorbereiten
 			TweenMax.to(paddle,0.3,{alpha:1});
 			TweenMax.to(ball,0.3,{alpha:1});
 			

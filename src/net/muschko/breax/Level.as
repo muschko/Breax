@@ -49,48 +49,57 @@ package net.muschko.breax {
                 switch(brickType) {
                 	
                 	case "brick0":
-                		
+                		// Space
                 		var brick0:Brick = setBrickPosition(i);      		
                 		brick0.gotoAndStop(0);
                 		break;
                 		
                 	case "brick1":
-                	
+                		// Blau
                 		var brick1:Brick = setBrickPosition(i); 
                 		brick1.gotoAndStop(1);
                 		brick1.setScore(25);
                 		break;
                 		
                 	case "brick2":
-                	
+                		// Grün
                 		var brick2:Brick = setBrickPosition(i); 
                 		brick2.gotoAndStop(2);
                 		brick2.setScore(25);
                 		break;
                 	case "brick3":
-                	
+                		// Rot
                 		var brick3:Brick = setBrickPosition(i); 
                 		brick3.gotoAndStop(3);
                 		brick3.setScore(25);
                 		break;
                 	case "brick4":
-                	
+                		// Orange
                 		var brick4:Brick = setBrickPosition(i); 
                 		brick4.gotoAndStop(4);
                 		brick4.setScore(25);
                 		break;
                 	case "brick5":
-                	
+                		// Lila
                 		var brick5:Brick = setBrickPosition(i); 
                 		brick5.gotoAndStop(5);
                 		brick5.setScore(25);
                 		break;
                 	case "brick6":
-                	
+                		// Unzerstörbar
                 		var brick6:Brick = setBrickPosition(i); 
                 		brick6.gotoAndStop(6);
                 		brick6.setScore(0);
                 		brick6.setDestructable(false);
+                		break;
+                	case "brick7":
+                		// Dreck
+                		var brick7:Brick = setBrickPosition(i); 
+                		brick7.gotoAndStop(7);
+                		brick7.setScore(0);
+                		brick7.setBreakable(true);
+                		brick7.setDestructable(false);
+                		brick5.setScore(30);
                 		break;
            
                 }                    		    					

@@ -9,6 +9,7 @@ package net.muschko.breax {
 		private static const HEIGHT:int = 20;
 		private static const WIDTH:int = 30;
 		private var destructable:Boolean = true;
+		private var breakable:Boolean = false;
 		private var positionX:int;
 		private var positionY:int;
 		private var score:int;
@@ -54,6 +55,14 @@ package net.muschko.breax {
 
 		public function setScore(score : int) : void {
 			this.score = score;
+		}
+
+		public function getBreakable() : Boolean {
+			return breakable;
+		}
+
+		public function setBreakable(breakable : Boolean) : void {
+			this.breakable = breakable;
 		}
 		
 		

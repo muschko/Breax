@@ -4,7 +4,12 @@ net.muschko.breax {
 	import flash.events.MouseEvent;
 	import flash.events.Event;
 	import flash.display.MovieClip;
-
+	
+	/**
+	 * Breax Main Class
+	 * 
+	 * @author muschko
+	 */
 	public class Breax extends MovieClip
 	{
 		private var titleScreen:TitleAsset;
