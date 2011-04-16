@@ -12,6 +12,7 @@ package net.muschko.breax {
 	public class Level extends MovieClip {
 		
 		private var bricks:Array = new Array();
+		private var pointBricks:Array = new Array();
 		private var loader:URLLoader = new URLLoader();
 		private var levelXML:XML;
 		private var bricksList:XMLList;
@@ -60,6 +61,9 @@ package net.muschko.breax {
                 		var brick1:Brick = setBrickPosition(i,false); 
                 		brick1.gotoAndStop(1);
                 		brick1.setScore(25);
+                		// Listen hinzufügen
+                		bricks.push(brick1);
+                		pointBricks.push(brick1);                		
                 		break;
                 		
                 	case "brick2":
@@ -67,24 +71,36 @@ package net.muschko.breax {
                 		var brick2:Brick = setBrickPosition(i,false); 
                 		brick2.gotoAndStop(2);
                 		brick2.setScore(25);
+                		// Listen hinzufügen
+                		bricks.push(brick2);
+                		pointBricks.push(brick2);  
                 		break;
                 	case "brick3":
                 		// Rot
                 		var brick3:Brick = setBrickPosition(i,false); 
                 		brick3.gotoAndStop(3);
                 		brick3.setScore(25);
+                		// Listen hinzufügen
+                		bricks.push(brick3);
+                		pointBricks.push(brick3);  
                 		break;
                 	case "brick4":
                 		// Orange
                 		var brick4:Brick = setBrickPosition(i,false); 
                 		brick4.gotoAndStop(4);
                 		brick4.setScore(25);
+                		// Listen hinzufügen
+                		bricks.push(brick4);
+                		pointBricks.push(brick4);  
                 		break;
                 	case "brick5":
                 		// Lila
                 		var brick5:Brick = setBrickPosition(i,false); 
                 		brick5.gotoAndStop(5);
                 		brick5.setScore(25);
+                		// Listen hinzufügen
+                		bricks.push(brick5);
+                		pointBricks.push(brick5);  
                 		break;
                 	case "brick6":
                 		// Unzerstörbar
@@ -92,6 +108,8 @@ package net.muschko.breax {
                 		brick6.gotoAndStop(6);
                 		brick6.setScore(0);
                 		brick6.setDestructable(false);
+                		// Listen hinzufügen
+                		bricks.push(brick6);
                 		break;
                 	case "brick7":
                 		// Dreck
@@ -101,19 +119,21 @@ package net.muschko.breax {
                 		brick7.setBreakable(true);
                 		brick7.setDestructable(false);
                 		brick7.setScore(30);
+                		// Listen hinzufügen
+                		bricks.push(brick7);
+                		pointBricks.push(brick7);  
                 		break;
            
                 }                    		    					
 				rowCounter = rowCounter + 1;
             } 			
-			
+			trace("Anzahl: "+pointBricks.length);
 		}
 		
 		private function setBrickPosition(counter:int,blankBrick:Boolean):Brick {
 		
 			if (!blankBrick) {	
 				var brick:Brick = new Brick();
-	    		bricks.push(brick);
 				
 				if (rowCounter == 20) {
 					rowBreak = true;
@@ -148,11 +168,24 @@ package net.muschko.breax {
 	    		return brick;  
 			} else {
 				var brick1:Brick = new Brick();
-				if (counter != 0 ) {
+								
+				if (rowCounter == 20) {
+					rowBreak = true;
+				}			
+				
+				if (counter != 0 && !rowBreak ) {
 					currentBrickPosition = currentBrickPosition + brick1.getWIDTH()+brickPaddingX;
 				} else {
 					currentBrickPosition = 1;
 				}
+
+				// Position Y für den Stein
+	    		if (rowBreak) {
+	    			rowHeight = rowHeight + brick1.getHEIGHT()+brickPaddingY;
+	    			rowCounter = 0;
+	    			rowBreak = false;	    		
+	    		} 
+				
 				return null;
 			}
 		}
@@ -171,6 +204,14 @@ package net.muschko.breax {
 
 		public function setLevelName(levelName : String) : void {
 			this.levelName = levelName;
+		}
+
+		public function getPointBricks() : Array {
+			return pointBricks;
+		}
+
+		public function setPointBricks(pointBricks : Array) : void {
+			this.pointBricks = pointBricks;
 		}
 		
 		

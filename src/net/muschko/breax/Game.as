@@ -120,6 +120,7 @@ package net.muschko.breax {
 		private function kickBall(e:Event):void {
 			firstKick = false;
 			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
 			this.addEventListener(Event.ENTER_FRAME, frameScript, false, 0, true);
 		}
@@ -191,22 +192,30 @@ package net.muschko.breax {
 						// Stein entfernen
 						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
 						level.getBricks().splice(level.getBricks().indexOf(brick),1);
+						level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
 						
 						// Punkte hinzufügen
 						score = score + brick.getScore();
 						scoreTextField.text = score.toString();								
 						
+						// Level geschafft
+						if (level.getPointBricks().length == 0) {
+							this.removeEventListener(Event.ENTER_FRAME, frameScript);
+							levelDone();
+							break;							
+						}
+						
+												
 						// Ball abprallen lassen
 						if (brick.hitTestPoint(ballRect.x ,ballRect.top) || brick.hitTestPoint(ballRect.x, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));
-							trace("HIT TOP OR BOTTOM");						
+							ball.setYspeed(-(ball.getYspeed()));													
 							break;
 						} else if (brick.hitTestPoint(ballRect.left, ballRect.y) || (brick.hitTestPoint(ballRect.right, ballRect.y))){
 							ball.setXspeed(-(ball.getXspeed()));
-							trace("HIT RIGHT OR LEFT");	
 							break;
 						}						
-						break;						
+						break;	
+											
 					} 
 					// Wenn der Ball einen brechbaren Stein trifft
 					else if ( brick.getBreakable() ) {
@@ -218,10 +227,18 @@ package net.muschko.breax {
 						 	// Stein entfernen
 						 	TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
 							level.getBricks().splice(level.getBricks().indexOf(brick),1);
+							level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
 							
 							// Punkte hinzufügen
 							score = score + brick.getScore();
 							scoreTextField.text = score.toString();	
+							
+							// Level geschafft
+							if (level.getPointBricks().length == 0) {
+								this.removeEventListener(Event.ENTER_FRAME, frameScript);
+								levelDone();
+								break;
+							}					
 						 }						 
 						 
 						 // Ball abprallen lassen
@@ -290,6 +307,10 @@ package net.muschko.breax {
 		
 		private function removeBrickChild(brick:Brick):void {
 			level.removeChild(brick);
+		}
+		
+		private function levelDone():void {
+			trace("LEVEL DONE");
 		}
 	}
 }
