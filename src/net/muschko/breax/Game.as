@@ -125,19 +125,20 @@ package net.muschko.breax {
 		}
 		
 		private function placeBallonPaddle(e:Event):void {
-			ball.x = paddle.x+paddle.width/2-ball.width/2;
+			ball.x = paddle.x+paddle.width/2;
 			ball.y = paddle.y-ball.height-2;
 			
 			levelNameTextField.text = level.getLevelName().toString();
 		}
 		
 		private function frameScript(e:Event):void {
-
+			
 			// Ballbewegung
 			ball.x += ball.getXspeed();
 			ball.y += ball.getYspeed();			
-					
-			if (ball.x >= stage.stageWidth - ball.width || ball.x <= ball.width/2) {
+						
+			// Spielfeldbegrenzung		
+			if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width) {
 				ball.setXspeed(-(ball.getXspeed()));		
 			} else if (ball.y <= ball.height/2) {
 				ball.setYspeed(-(ball.getYspeed()));
@@ -146,8 +147,9 @@ package net.muschko.breax {
 				this.removeEventListener(Event.ENTER_FRAME, frameScript);
 				dispatchEvent(new Event("lostLife"));
 			} 
-			if (paddle.hitTestPoint(ball.x, ball.y+ball.height, true)) {
-				 
+			
+			if (paddle.hitTestObject(ball)) {
+
 				// 5 Punkte für Pedal
 				score = score + 5;
 				scoreTextField.text = score.toString(); 
@@ -167,14 +169,14 @@ package net.muschko.breax {
                    ball.setXspeed(-(ball.getXspeed()));
                 }
 									
-			} 
+			}		
 			
-			var ballRect:Rectangle;
 			var brickRect:Rectangle;
-			
-			ballRect = ball.getRect(this);
+			var ballRect:Rectangle;
 			
 			for(var i:int = 0; i<=level.getBricks().length-1; i++) {
+						
+				ballRect = ball.getRect(this);				 
 				
 				var brick:Brick = level.getBricks()[i];
 				
@@ -182,7 +184,7 @@ package net.muschko.breax {
 				
 				// Wenn der Ball einen Stein trifft
 				if (ballRect.intersects(brickRect)) {							
-					
+
 					// Wenn der Ball einen zerstörbaren Stein trifft						
 					if ( brick.getDestructable()) {
 						
@@ -195,15 +197,16 @@ package net.muschko.breax {
 						scoreTextField.text = score.toString();								
 						
 						// Ball abprallen lassen
-						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x-ball.width/2, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));						
+						if (brick.hitTestPoint(ballRect.x ,ballRect.top) || brick.hitTestPoint(ballRect.x, ballRect.bottom)) {
+							ball.setYspeed(-(ball.getYspeed()));
+							trace("HIT TOP OR BOTTOM");						
 							break;
-						} else if (brickRect.contains(ballRect.left, ballRect.y+1) || brickRect.contains(ballRect.right, ballRect.y+1)){
-							ball.setXspeed(-(ball.getXspeed()));	
+						} else if (brick.hitTestPoint(ballRect.left, ballRect.y) || (brick.hitTestPoint(ballRect.right, ballRect.y))){
+							ball.setXspeed(-(ball.getXspeed()));
+							trace("HIT RIGHT OR LEFT");	
 							break;
 						}						
-						
-						break;
+						break;						
 					} 
 					// Wenn der Ball einen brechbaren Stein trifft
 					else if ( brick.getBreakable() ) {
@@ -222,24 +225,28 @@ package net.muschko.breax {
 						 }						 
 						 
 						 // Ball abprallen lassen
-						 if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x-ball.width/2, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));						
+						 if (brickRect.contains(ballRect.x ,ballRect.top) || (brickRect.contains(ballRect.x, ballRect.bottom))) {
+							ball.setYspeed(-(ball.getYspeed()));
 							break;
-						} else if (brickRect.contains(ballRect.left, ballRect.y+1) || brickRect.contains(ballRect.right, ballRect.y+1)){
-							ball.setXspeed(-(ball.getXspeed()));	
+							
+						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
+							ball.setXspeed(-(ball.getXspeed()));
 							break;
-						}	
+						}
+						break;
 					}
 					// Stein ist nicht zerstörbar!					
 					else {
 						// Ball abprallen lassen
 						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));						
-							break;
+							ball.setYspeed(-(ball.getYspeed()));
+							break;						
+							
 						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
-							ball.setXspeed(-(ball.getXspeed()));	
-							break;
+							ball.setXspeed(-(ball.getXspeed()));
+							break;							
 						}
+						break;
 					}					
 				}
 			}			
