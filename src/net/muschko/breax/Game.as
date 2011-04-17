@@ -175,20 +175,17 @@ package net.muschko.breax {
 			var brickRect:Rectangle;
 			var ballRect:Rectangle;
 			
-			for(var i:int = 0; i<=level.getBricks().length-1; i++) {
-						
-				ballRect = ball.getRect(this);				 
-				
-				var brick:Brick = level.getBricks()[i];
-				
-				brickRect = brick.getRect(this);					
+			for each (var brick:Brick in level.getBricks()) {
+									
+				ballRect = ball.getRect(this);	
+				brickRect = brick.getRect(this);	
 				
 				// Wenn der Ball einen Stein trifft
 				if (ballRect.intersects(brickRect)) {							
-
+									
 					// Wenn der Ball einen zerstörbaren Stein trifft						
-					if ( brick.getDestructable()) {
-						
+					if ( brick.getDestructable()) {					
+													
 						// Stein entfernen
 						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
 						level.getBricks().splice(level.getBricks().indexOf(brick),1);
@@ -196,26 +193,22 @@ package net.muschko.breax {
 						
 						// Punkte hinzufügen
 						score = score + brick.getScore();
-						scoreTextField.text = score.toString();								
-						
+						scoreTextField.text = score.toString();	
+											
 						// Level geschafft
 						if (level.getPointBricks().length == 0) {
 							this.removeEventListener(Event.ENTER_FRAME, frameScript);
 							levelDone();
-							break;							
+							return;							
 						}
-						
 												
 						// Ball abprallen lassen
-						if (brick.hitTestPoint(ballRect.x ,ballRect.top) || brick.hitTestPoint(ballRect.x, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));													
-							break;
-						} else if (brick.hitTestPoint(ballRect.left, ballRect.y) || (brick.hitTestPoint(ballRect.right, ballRect.y))){
+						if (brick.hitTestPoint(ballRect.x ,ballRect.top, false) || brick.hitTestPoint(ballRect.x, ballRect.bottom, false)) {
+							ball.setYspeed(-(ball.getYspeed()));	
+						} else if (brick.hitTestPoint(ballRect.left, ballRect.y, false) || (brick.hitTestPoint(ballRect.right, ballRect.y, false))){
 							ball.setXspeed(-(ball.getXspeed()));
-							break;
-						}						
-						break;	
-											
+						}
+						return;					
 					} 
 					// Wenn der Ball einen brechbaren Stein trifft
 					else if ( brick.getBreakable() ) {
@@ -242,13 +235,13 @@ package net.muschko.breax {
 						 }						 
 						 
 						 // Ball abprallen lassen
-						 if (brickRect.contains(ballRect.x ,ballRect.top) || (brickRect.contains(ballRect.x, ballRect.bottom))) {
+						
+						if (brickRect.contains(ballRect.x ,ballRect.top) || (brickRect.contains(ballRect.x, ballRect.bottom))) {
 							ball.setYspeed(-(ball.getYspeed()));
-							break;
-							
 						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
 							ball.setXspeed(-(ball.getXspeed()));
-							break;
+						}else {
+							ball.setXspeed(-(ball.getXspeed()));							
 						}
 						break;
 					}
@@ -256,14 +249,13 @@ package net.muschko.breax {
 					else {
 						// Ball abprallen lassen
 						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));
-							break;						
-							
+							ball.setYspeed(-(ball.getYspeed()));			
 						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
 							ball.setXspeed(-(ball.getXspeed()));
-							break;							
+						}else {
+							ball.setXspeed(-(ball.getXspeed()));							
 						}
-						break;
+						break;					
 					}					
 				}
 			}			

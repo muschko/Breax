@@ -1,4 +1,5 @@
 package net.muschko.breax {
+	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.net.URLRequest;
@@ -163,7 +164,10 @@ package net.muschko.breax {
 	    		
 	    		brick.x = brick.getPositionX();
 	    		brick.y = brick.getPositionY();
-	    		addChild(brick);      		
+	    		addChild(brick);
+	    		
+	    		// Schatten
+	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:5, blurY:5, distance:0, alpha:0.5}}); 
 	    		
 	    		return brick;  
 			} else {

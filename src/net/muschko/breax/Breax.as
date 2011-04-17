@@ -1,5 +1,7 @@
 ﻿package 
 net.muschko.breax {
+	import com.greensock.plugins.DropShadowFilterPlugin;
+	import com.greensock.plugins.TweenPlugin;
 	import com.greensock.TweenMax;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
@@ -27,9 +29,13 @@ net.muschko.breax {
 		}
 		
 		private function initBreax():void {
+			// Plugin für Schatten
+			TweenPlugin.activate([DropShadowFilterPlugin]);
+			
+			// Listener
 			addEventListener(TITLE_SCREEN, setupTitle);
 			addEventListener(GAME_SCREEN, setupGame);
-								
+					
 			dispatchEvent(new Event(TITLE_SCREEN));		
 		}
 		
