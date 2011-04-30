@@ -14,6 +14,7 @@ package net.muschko.breax {
 		
 		private var bricks:Array = new Array();
 		private var pointBricks:Array = new Array();
+		private var collisionBricks:Array = new Array();
 		private var loader:URLLoader = new URLLoader();
 		private var levelXML:XML;
 		private var bricksList:XMLList;
@@ -59,9 +60,9 @@ package net.muschko.breax {
                 		
                 	case "brick1":
                 		// Blau
-                		var brick1:Brick = setBrickPosition(i,false); 
-                		brick1.gotoAndStop(1);
-                		brick1.setScore(25);
+                		var brick1:AABB = setBrickPosition(i,false); 
+                		brick1.getBrick().gotoAndStop(1);
+                		brick1.getBrick().setScore(25);
                 		// Listen hinzufügen
                 		bricks.push(brick1);
                 		pointBricks.push(brick1);                		
@@ -69,57 +70,57 @@ package net.muschko.breax {
                 		
                 	case "brick2":
                 		// Grün
-                		var brick2:Brick = setBrickPosition(i,false); 
-                		brick2.gotoAndStop(2);
-                		brick2.setScore(25);
+                		var brick2:AABB = setBrickPosition(i,false); 
+                		brick2.getBrick().gotoAndStop(2);
+                		brick2.getBrick().setScore(25);
                 		// Listen hinzufügen
                 		bricks.push(brick2);
                 		pointBricks.push(brick2);  
                 		break;
                 	case "brick3":
                 		// Rot
-                		var brick3:Brick = setBrickPosition(i,false); 
-                		brick3.gotoAndStop(3);
-                		brick3.setScore(25);
+                		var brick3:AABB = setBrickPosition(i,false); 
+                		brick3.getBrick().gotoAndStop(3);
+                		brick3.getBrick().setScore(25);
                 		// Listen hinzufügen
                 		bricks.push(brick3);
                 		pointBricks.push(brick3);  
                 		break;
                 	case "brick4":
                 		// Orange
-                		var brick4:Brick = setBrickPosition(i,false); 
-                		brick4.gotoAndStop(4);
-                		brick4.setScore(25);
+                		var brick4:AABB = setBrickPosition(i,false); 
+                		brick4.getBrick().gotoAndStop(4);
+                		brick4.getBrick().setScore(25);
                 		// Listen hinzufügen
                 		bricks.push(brick4);
                 		pointBricks.push(brick4);  
                 		break;
                 	case "brick5":
                 		// Lila
-                		var brick5:Brick = setBrickPosition(i,false); 
-                		brick5.gotoAndStop(5);
-                		brick5.setScore(25);
+                		var brick5:AABB = setBrickPosition(i,false); 
+                		brick5.getBrick().gotoAndStop(5);
+                		brick5.getBrick().setScore(25);
                 		// Listen hinzufügen
                 		bricks.push(brick5);
                 		pointBricks.push(brick5);  
                 		break;
                 	case "brick6":
                 		// Unzerstörbar
-                		var brick6:Brick = setBrickPosition(i,false); 
-                		brick6.gotoAndStop(6);
-                		brick6.setScore(0);
-                		brick6.setDestructable(false);
+                		var brick6:AABB = setBrickPosition(i,false); 
+                		brick6.getBrick().gotoAndStop(6);
+                		brick6.getBrick().setScore(0);
+                		brick6.getBrick().setDestructable(false);
                 		// Listen hinzufügen
                 		bricks.push(brick6);
                 		break;
                 	case "brick7":
                 		// Dreck
-                		var brick7:Brick = setBrickPosition(i,false); 
-                		brick7.gotoAndStop(7);
-                		brick7.setScore(0);
-                		brick7.setBreakable(true);
-                		brick7.setDestructable(false);
-                		brick7.setScore(30);
+                		var brick7:AABB = setBrickPosition(i,false); 
+                		brick7.getBrick().gotoAndStop(7);
+                		brick7.getBrick().setScore(0);
+                		brick7.getBrick().setBreakable(true);
+                		brick7.getBrick().setDestructable(false);
+                		brick7.getBrick().setScore(30);
                 		// Listen hinzufügen
                 		bricks.push(brick7);
                 		pointBricks.push(brick7);  
@@ -129,9 +130,10 @@ package net.muschko.breax {
 				rowCounter = rowCounter + 1;
             } 			
 			trace("Anzahl: "+pointBricks.length);
+			
 		}
 		
-		private function setBrickPosition(counter:int,blankBrick:Boolean):Brick {
+		private function setBrickPosition(counter:int,blankBrick:Boolean):AABB {
 		
 			if (!blankBrick) {	
 				var brick:Brick = new Brick();
@@ -164,12 +166,18 @@ package net.muschko.breax {
 	    		
 	    		brick.x = brick.getPositionX();
 	    		brick.y = brick.getPositionY();
-	    		addChild(brick);
+	    		
 	    		
 	    		// Schatten
-	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:5, blurY:5, distance:0, alpha:0.5}}); 
+	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:0, blurY:0, distance:0, alpha:0.5}}); 
 	    		
-	    		return brick;  
+	    		var brickAABB:AABB = new AABB(brick.x + brick.width/2 ,brick.y + brick.height/2, 30 , 20 );
+	    		brickAABB.setBrick(brick);	
+	    		
+	    		addChild(brick);    		
+	    		
+	    		return brickAABB;
+	    		
 			} else {
 				var brick1:Brick = new Brick();
 								
@@ -216,6 +224,14 @@ package net.muschko.breax {
 
 		public function setPointBricks(pointBricks : Array) : void {
 			this.pointBricks = pointBricks;
+		}
+
+		public function getCollisionBricks() : Array {
+			return collisionBricks;
+		}
+
+		public function setCollisionBricks(collisionBricks : Array) : void {
+			this.collisionBricks = collisionBricks;
 		}
 		
 		

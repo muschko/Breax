@@ -5,8 +5,8 @@ package net.muschko.breax {
 	 */
 	public class Ball extends BallAsset {
 		private var speed : int;
-		private var xspeed: int;
-		private var yspeed: int;
+		public var vx: int;
+		public var vy: int;
 
 		public function Ball(speed : int) {
 			this.speed = speed;
@@ -21,19 +21,19 @@ package net.muschko.breax {
 		}
 
 		public function getXspeed() : int {
-			return xspeed;
+			return vx;
 		}
 
-		public function setXspeed(xspeed : int) : void {
-			this.xspeed = xspeed;
+		public function setXspeed(vx : int) : void {
+			this.vx = vx;
 		}
 
 		public function getYspeed() : int {
-			return yspeed;
+			return vy;
 		}
 
-		public function setYspeed(yspeed : int) : void {
-			this.yspeed = yspeed;
+		public function setYspeed(vy : int) : void {
+			this.vy = vy;
 		}
 		
 		

@@ -1,4 +1,7 @@
 package net.muschko.breax {
+	import flash.geom.Point;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import flash.text.TextFieldAutoSize;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
@@ -25,7 +28,8 @@ package net.muschko.breax {
 		private var currentLevel:int = 1;
 		private var level:Level;
 		private var background:BackgroundAsset;
-							
+		private var gameTimer:Timer;
+					
 		public function Game() {
 		}
 		
@@ -48,8 +52,14 @@ package net.muschko.breax {
 			ball = new Ball(5);
 			addChild(ball);
 			
-			ball.setXspeed(ball.getSpeed() * Math.cos((300) * Math.PI / 180));
-			ball.setYspeed(ball.getSpeed() * Math.sin((300) * Math.PI / 180));			
+			ball.setXspeed(0);
+			ball.setYspeed(5);
+			
+			ball.y = 300;
+			ball.x = 310.5;
+			
+			//ball.setXspeed(Math.ceil(ball.getSpeed() * Math.cos((300) * Math.PI / 180)));
+			//ball.setYspeed(Math.ceil(ball.getSpeed() * Math.sin((300) * Math.PI / 180)));			
 	
 			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			
@@ -110,6 +120,7 @@ package net.muschko.breax {
 			trace("Level: " + level.getLevelName());
 			addChild(levelNameTextField);
 			
+			
 			// First kick
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
@@ -122,146 +133,116 @@ package net.muschko.breax {
 			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
-			this.addEventListener(Event.ENTER_FRAME, frameScript, false, 0, true);
+			gameTimer=new Timer(5);
+			gameTimer.addEventListener(TimerEvent.TIMER, frameScript);
+			gameTimer.start();			
 		}
 		
 		private function placeBallonPaddle(e:Event):void {
-			ball.x = paddle.x+paddle.width/2;
-			ball.y = paddle.y-ball.height-2;
 			
 			levelNameTextField.text = level.getLevelName().toString();
 		}
 		
 		private function frameScript(e:Event):void {
-			
+					
 			// Ballbewegung
-			ball.x += ball.getXspeed();
-			ball.y += ball.getYspeed();			
+			ball.x = Math.round(ball.x + ball.getXspeed());
+			ball.y = Math.round(ball.y + ball.getYspeed());			
 						
 			// Spielfeldbegrenzung		
-			if (ball.x >= stage.stageWidth - ball.width/2 || ball.x <= ball.width) {
-				ball.setXspeed(-(ball.getXspeed()));		
-			} else if (ball.y <= ball.height/2) {
+			if (ball.x >= stage.stageWidth - ball.width || ball.x <= ball.width) {
+				
+				ball.setXspeed(-(ball.getXspeed()));
+									
+			} else if (ball.y <= 0) {
+				
+				ball.y = ball.height;
 				ball.setYspeed(-(ball.getYspeed()));
+				
 			} else if (ball.y >= stage.stageHeight + ball.height) {
+				
 				// Leben verlieren
-				this.removeEventListener(Event.ENTER_FRAME, frameScript);
+				gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
+				gameTimer.stop();
 				dispatchEvent(new Event("lostLife"));
 			} 
 			
 			if (paddle.hitTestObject(ball)) {
-
+			
 				// 5 Punkte für Pedal
 				score = score + 5;
 				scoreTextField.text = score.toString(); 
 				 
-				ball.setYspeed(-(ball.getYspeed()));
-
-                var pixelsLeftRight:int = 25;
-                
-                if ((ball.x > (paddle.x + paddle.width - pixelsLeftRight)) && (ball.getXspeed() < 0)) {
-                    // : Impact auf der rechten "Kante" und Ball kam von rechts
-                    // : X Richtung umdrehen
-                    ball.setXspeed(-(ball.getXspeed()));
-                } else
-                if ((ball.x + ball.width <= paddle.x + pixelsLeftRight) && (ball.getXspeed() > 0)) {
-                    // : Impact auf der linken "Kante" und Ball kam von links
-                    // : X Richtung umdrehen
-                   ball.setXspeed(-(ball.getXspeed()));
-                }
-									
-			}		
-			
-			var brickRect:Rectangle;
-			var ballRect:Rectangle;
-			
-			for each (var brick:Brick in level.getBricks()) {
-									
-				ballRect = ball.getRect(this);	
-				brickRect = brick.getRect(this);	
-				
-				// Wenn der Ball einen Stein trifft
-				if (ballRect.intersects(brickRect)) {							
-									
-					// Wenn der Ball einen zerstörbaren Stein trifft						
-					if ( brick.getDestructable()) {					
-													
-						// Stein entfernen
-						TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
-						level.getBricks().splice(level.getBricks().indexOf(brick),1);
-						level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
+				if (ball.getYspeed()>0) {
+					
+					if (ball.getYspeed()>6) {
 						
-						// Punkte hinzufügen
-						score = score + brick.getScore();
-						scoreTextField.text = score.toString();	
-											
-						// Level geschafft
-						if (level.getPointBricks().length == 0) {
-							this.removeEventListener(Event.ENTER_FRAME, frameScript);
-							levelDone();
-							return;							
-						}
-												
-						// Ball abprallen lassen
-						if (brick.hitTestPoint(ballRect.x ,ballRect.top, false) || brick.hitTestPoint(ballRect.x, ballRect.bottom, false)) {
-							ball.setYspeed(-(ball.getYspeed()));	
-						} else if (brick.hitTestPoint(ballRect.left, ballRect.y, false) || (brick.hitTestPoint(ballRect.right, ballRect.y, false))){
-							ball.setXspeed(-(ball.getXspeed()));
-						}
-						return;					
-					} 
-					// Wenn der Ball einen brechbaren Stein trifft
-					else if ( brick.getBreakable() ) {
-						 						 
-						 if (brick.currentFrame == 7) {
-						 	// Anderen Sprite anzeigen "brüchigen Stein"
-						 	brick.gotoAndStop(8);
-						 } else {
-						 	// Stein entfernen
-						 	TweenMax.to(brick, 0.5, {alpha: 0, y: brick.y+10, rotation: Math.random()*20, onComplete: removeBrickChild, onCompleteParams: [brick]});						
-							level.getBricks().splice(level.getBricks().indexOf(brick),1);
-							level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
-							
-							// Punkte hinzufügen
-							score = score + brick.getScore();
-							scoreTextField.text = score.toString();	
-							
-							// Level geschafft
-							if (level.getPointBricks().length == 0) {
-								this.removeEventListener(Event.ENTER_FRAME, frameScript);
-								levelDone();
-								break;
-							}					
-						 }						 
-						 
-						 // Ball abprallen lassen
+						ball.setYspeed(ball.getYspeed()*-1);
 						
-						if (brickRect.contains(ballRect.x ,ballRect.top) || (brickRect.contains(ballRect.x, ballRect.bottom))) {
-							ball.setYspeed(-(ball.getYspeed()));
-						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
-							ball.setXspeed(-(ball.getXspeed()));
-						}else {
-							ball.setXspeed(-(ball.getXspeed()));							
-						}
-						break;
+					} else {
+						
+						ball.setYspeed(ball.getYspeed()*-1.05);
+						
 					}
-					// Stein ist nicht zerstörbar!					
-					else {
-						// Ball abprallen lassen
-						if (brickRect.contains(ballRect.x ,ballRect.top) || brickRect.contains(ballRect.x, ballRect.bottom)) {
-							ball.setYspeed(-(ball.getYspeed()));			
-						} else if (brickRect.contains(ballRect.left, ballRect.y) || brickRect.contains(ballRect.right, ballRect.y)){
-							ball.setXspeed(-(ball.getXspeed()));
-						}else {
-							ball.setXspeed(-(ball.getXspeed()));							
-						}
-						break;					
-					}					
+					ball.setXspeed(ball.getXspeed() + (ball.x - paddle.x) * 0.05);
 				}
-			}			
-			 
-		}		
+				
+				ball.x = Math.round(ball.x + ball.getXspeed());
+				ball.y = Math.round(ball.y + ball.getYspeed());
+			}				
 		
+			
+			var kollisionsDaten:Array = new Array;
+			kollisionsDaten.length = 0;
+	
+			for each (var brick:AABB in level.getBricks()) {
+				
+					brick.detectCollision(ball, kollisionsDaten);							
+										
+					if (kollisionsDaten.length) {  // kollision vorhanden
+					   kollisionsDaten.sortOn("distance", Array.NUMERIC); // objekte anhand der entfernung sortieren
+					   
+					   var index:int = level.getBricks().indexOf(brick);				   		
+					   					   
+					   // in kollisionsDaten[0] befindet sich nun das kollisionsobjekt des zuerst getroffenen AABB objektes
+					   
+					   trace("Kollision mit " + kollisionsDaten[0].target + " | Getroffene Seite: " + kollisionsDaten[0].side);
+					   if (kollisionsDaten[0].side == 1) {
+					   		
+					   		removeBrick(index);					   	
+							ball.setXspeed(-(ball.getXspeed()));
+							kollisionsDaten.length = 0;
+							//break;   
+							 
+					   }else if(kollisionsDaten[0].side == 2){
+						
+							removeBrick(index);
+					   		ball.setXspeed(-(ball.getXspeed()));
+					   		kollisionsDaten.length = 0;
+					   		//break;
+					   		
+					   }else if(kollisionsDaten[0].side == 3){
+							
+							removeBrick(index);
+							ball.setYspeed(-(ball.getYspeed()));
+							kollisionsDaten.length = 0;
+							//break;
+					   		
+					   }else if(kollisionsDaten[0].side == 4){
+
+							removeBrick(index);
+					   		ball.setYspeed(-(ball.getYspeed()));
+					   		kollisionsDaten.length = 0;
+					   		//break;
+					   }
+					   				   				
+				}
+				
+			}
+		 
+		}
+		
+			
 		private function lifeLost(e:Event):void {
 			
 			TweenMax.to(paddle,0.3,{alpha:0});
@@ -276,12 +257,73 @@ package net.muschko.breax {
 			} else {
 				scoreTextField.text = "";
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
-				this.removeEventListener(Event.ENTER_FRAME, frameScript);
+				gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
+				gameTimer.stop();
 				paddle.destroy();
 				removeChild(ball);
 				dispatchEvent(new Event("gameover"));
 			}
 						
+		}
+		
+		private function removeBrick(index:int):void {		
+			
+			var brick:AABB = level.getBricks()[index];	
+			
+			// Wenn der Ball einen zerstörbaren Stein trifft						
+			if (brick.getBrick().getDestructable()) {					
+										
+				// Stein entfernen
+				TweenMax.to(brick.getBrick(), 0.5, {alpha: 0, y: brick.getBrick().y+10, rotation: Math.random()*20, onComplete:removeBrickChild, onCompleteParams:[brick.getBrick()]});						
+				level.getBricks().splice(level.getBricks().indexOf(brick),1);
+				level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
+				
+				// Punkte hinzufügen
+				score = score + brick.getBrick().getScore();
+				scoreTextField.text = score.toString();	
+									
+				// Level geschafft
+				if (level.getPointBricks().length == 0) {
+					gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
+					gameTimer.stop();
+					levelDone();
+					return;							
+				}					
+			} 
+			// Wenn der Ball einen brechbaren Stein trifft
+			else if ( brick.getBrick().getBreakable() ) {
+				 						 
+				 if (brick.currentFrame == 7) {
+				 	// Anderen Sprite anzeigen "brüchigen Stein"
+				 	brick.getBrick().gotoAndStop(8);
+				 } else {
+				 	// Stein entfernen
+				 	TweenMax.to(brick.getBrick(), 0.5, {alpha: 0, y: brick.getBrick().y+10, rotation: Math.random()*20, onComplete:removeBrickChild, onCompleteParams:[brick.getBrick()]});						
+					level.getBricks().splice(level.getBricks().indexOf(brick),1);
+					level.getPointBricks().splice(level.getPointBricks().indexOf(brick),1);
+										
+					// Punkte hinzufügen
+					score = score + brick.getBrick().getScore();
+					scoreTextField.text = score.toString();	
+
+					// Level geschafft
+					if (level.getPointBricks().length == 0) {
+						gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
+						gameTimer.stop();
+						levelDone();
+					}					
+				 }						 
+			}
+			// Stein ist nicht zerstörbar!					
+			else {
+				// Ball abprallen lassen
+			}
+										
+				
+		}
+		
+		private function removeBrickChild(brick:Brick):void {
+			level.removeChild(brick);
 		}
 		
 		private function prepareNewBall():void {
@@ -290,15 +332,14 @@ package net.muschko.breax {
 			TweenMax.to(paddle,0.3,{alpha:1});
 			TweenMax.to(ball,0.3,{alpha:1});
 			
-			ball.setXspeed(ball.getSpeed() * Math.cos((300) * Math.PI / 180));
-			ball.setYspeed(ball.getSpeed() * Math.sin((300) * Math.PI / 180));
+			ball.setXspeed(0);
+			ball.setYspeed(5);
+			
+			ball.y = 300;
+			ball.x = 310.5;
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
-		}
-		
-		private function removeBrickChild(brick:Brick):void {
-			level.removeChild(brick);
 		}
 		
 		private function levelDone():void {
