@@ -1,6 +1,7 @@
-package net.muschko.breax 
+package net.muschko.breax.aabb 
 
 {   
+	 import net.muschko.breax.Brick;
 	 public class AABB extends Brick
     {
         private var tempData:CollisionData, tempRay:Ray = new Ray(0, 0, 0, 0);

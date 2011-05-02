@@ -1,15 +1,16 @@
 package net.muschko.breax {
-	import flash.geom.Point;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
-	import flash.text.TextFieldAutoSize;
-	import flash.geom.Rectangle;
-	import flash.text.TextFormat;
-	import flash.text.TextField;
-	import flash.events.MouseEvent;
-	import flash.events.Event;
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.text.TextField;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.utils.Timer;
+	import net.muschko.breax.aabb.AABB;
 	
 	/**
 	 * GameEngine für Brix

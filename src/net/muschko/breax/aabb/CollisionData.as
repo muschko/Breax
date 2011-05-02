@@ -1,4 +1,4 @@
-package net.muschko.breax 
+package net.muschko.breax.aabb 
 {
 	public class CollisionData
 	{
