@@ -294,7 +294,7 @@ package net.muschko.breax {
 			// Wenn der Ball einen brechbaren Stein trifft
 			else if ( brick.getBrick().getBreakable() ) {
 				 						 
-				 if (brick.currentFrame == 7) {
+				 if (brick.getBrick().currentFrame == 7) {
 				 	// Anderen Sprite anzeigen "brüchigen Stein"
 				 	brick.getBrick().gotoAndStop(8);
 				 } else {
