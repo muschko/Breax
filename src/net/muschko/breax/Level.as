@@ -14,7 +14,6 @@ package net.muschko.breax {
 		
 		private var bricks:Array = new Array();
 		private var pointBricks:Array = new Array();
-		private var collisionBricks:Array = new Array();
 		private var loader:URLLoader = new URLLoader();
 		private var levelXML:XML;
 		private var bricksList:XMLList;
@@ -165,20 +164,20 @@ package net.muschko.breax {
 	    		}    		
 	    		
 	    		brick.x = brick.getPositionX();
-	    		brick.y = brick.getPositionY();
-	    		
+	    		brick.y = brick.getPositionY();	    		
+	    		addChild(brick);
 	    		
 	    		// Schatten
-	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:0, blurY:0, distance:0, alpha:0.5}}); 
+	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:5, blurY:5, distance:0, alpha:0.5}}); 
 	    		
-	    		var brickAABB:AABB = new AABB(brick.x + brick.width/2 ,brick.y + brick.height/2, 30 , 20 );
+	    		var brickAABB:AABB = new AABB(brick.x + 15 , brick.y + 10 , 35 , 20 );
+	    		
 	    		brickAABB.setBrick(brick);	
-	    		
-	    		addChild(brick);    		
-	    		
+	    			    		
 	    		return brickAABB;
 	    		
 			} else {
+				
 				var brick1:Brick = new Brick();
 								
 				if (rowCounter == 20) {
@@ -225,15 +224,6 @@ package net.muschko.breax {
 		public function setPointBricks(pointBricks : Array) : void {
 			this.pointBricks = pointBricks;
 		}
-
-		public function getCollisionBricks() : Array {
-			return collisionBricks;
-		}
-
-		public function setCollisionBricks(collisionBricks : Array) : void {
-			this.collisionBricks = collisionBricks;
-		}
-		
 		
 	}
 }

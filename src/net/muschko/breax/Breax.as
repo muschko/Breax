@@ -1,5 +1,6 @@
 ﻿package 
 net.muschko.breax {
+	import com.greensock.easing.Expo;
 	import com.greensock.plugins.DropShadowFilterPlugin;
 	import com.greensock.plugins.TweenPlugin;
 	import com.greensock.TweenMax;
@@ -17,10 +18,12 @@ net.muschko.breax {
 		private var titleScreen:TitleAsset;
 		private var gameOverScreen:GameOverAsset;
 		private var game:Game;
+		private var levelDone:LevelDoneAsset;
 		
 		static private const TITLE_SCREEN:String = "title";
 		static private const GAME_SCREEN:String = "game";
 		static private const GAME_OVER_SCREEN:String = "gameover";
+		static private const LEVEL_DONE:String = "levelDone";
 		
 				
 		public function Breax()
@@ -64,8 +67,9 @@ net.muschko.breax {
 			
 			game = new Game();
 			addChild(game);
-			game.addEventListener(GAME_OVER_SCREEN, setupGameOver);			
-			
+			game.addEventListener(GAME_OVER_SCREEN, setupGameOver);	
+			game.addEventListener(LEVEL_DONE, setupLevelDone);
+						
 			game.init();
 
 		}
@@ -87,12 +91,18 @@ net.muschko.breax {
 			TweenMax.to(titleScreen, 1, {alpha:0, onComplete:dispatchEventWithParam, onCompleteParams:[GAME_SCREEN]});	
 		}
 		
-		private function menuMouseOver(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.2, {alpha:0.5, x: e.currentTarget.x + 10});	
+		public function setupLevelDone(e:Event):void {
+			levelDone = new LevelDoneAsset();
+			addChild(levelDone);
+			
+			levelDone.alpha = 0;
+			
+			TweenMax.to(levelDone, 0.5, {alpha:1});
+			
+			stage.addEventListener(MouseEvent.CLICK, nextLevel);
+			
 		}
-		private function menuMouseOut(e:Event):void {
-			TweenMax.to(e.currentTarget, 0.2, {alpha:1, x: 115});	
-		}
+
 		private function backToTitle(e:Event):void {
 			
 			stage.removeEventListener(MouseEvent.CLICK, backToTitle);
@@ -103,8 +113,27 @@ net.muschko.breax {
 			dispatchEvent(new Event(TITLE_SCREEN));
 		}
 		
+		private function nextLevel(e:Event):void {
+			
+			stage.removeEventListener(MouseEvent.CLICK, backToTitle);
+			stage.removeEventListener(MouseEvent.CLICK, nextLevel);
+			
+			TweenMax.to(levelDone.LevelDoneInfo, 0.5, {alpha: 0, y: stage.stageHeight+100,ease:Expo.easeInOut, rotation: 20, onComplete:game.goToNextLevel});
+			
+			TweenMax.to(levelDone, 0.5, {alpha: 0});
+					
+		}
+		
 		private function dispatchEventWithParam(event:String):void {
 			dispatchEvent(new Event(event));
+		}
+		
+				
+		private function menuMouseOver(e:Event):void {
+			TweenMax.to(e.currentTarget, 0.2, {alpha:0.5, x: e.currentTarget.x + 10});	
+		}
+		private function menuMouseOut(e:Event):void {
+			TweenMax.to(e.currentTarget, 0.2, {alpha:1, x: 115});	
 		}
 		
 	}

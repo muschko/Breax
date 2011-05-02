@@ -29,6 +29,9 @@ package net.muschko.breax {
 		private var level:Level;
 		private var background:BackgroundAsset;
 		private var gameTimer:Timer;
+		private var kollisionsDaten:Array = new Array;
+		private var ballStartPositionY:int = 400;
+		private var ballStartPositionX:int = 310;
 					
 		public function Game() {
 		}
@@ -49,14 +52,14 @@ package net.muschko.breax {
 			TweenMax.to(paddle,0.5,{alpha:1});
 			
 			// Ball erstellen
-			ball = new Ball(5);
+			ball = new Ball(0);
 			addChild(ball);
 			
 			ball.setXspeed(0);
-			ball.setYspeed(5);
+			ball.setYspeed(-5);
 			
-			ball.y = 300;
-			ball.x = 310.5;
+			ball.y = ballStartPositionY;
+			ball.x = ballStartPositionX;
 			
 			//ball.setXspeed(Math.ceil(ball.getSpeed() * Math.cos((300) * Math.PI / 180)));
 			//ball.setYspeed(Math.ceil(ball.getSpeed() * Math.sin((300) * Math.PI / 180)));			
@@ -133,7 +136,7 @@ package net.muschko.breax {
 			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
-			gameTimer=new Timer(5);
+			gameTimer=new Timer(15);
 			gameTimer.addEventListener(TimerEvent.TIMER, frameScript);
 			gameTimer.start();			
 		}
@@ -150,11 +153,19 @@ package net.muschko.breax {
 			ball.y = Math.round(ball.y + ball.getYspeed());			
 						
 			// Spielfeldbegrenzung		
-			if (ball.x >= stage.stageWidth - ball.width || ball.x <= ball.width) {
+			if (ball.x >= stage.stageWidth - ball.width ) {
 				
+				ball.x = stage.stageWidth - ball.width;
 				ball.setXspeed(-(ball.getXspeed()));
-									
-			} else if (ball.y <= 0) {
+				
+			}
+			else if(ball.x <= 0) {
+				
+				ball.x = 0;
+				ball.setXspeed(-(ball.getXspeed()));
+			
+			}						
+			else if (ball.y <= 0) {
 				
 				ball.y = ball.height;
 				ball.setYspeed(-(ball.getYspeed()));
@@ -189,54 +200,45 @@ package net.muschko.breax {
 				
 				ball.x = Math.round(ball.x + ball.getXspeed());
 				ball.y = Math.round(ball.y + ball.getYspeed());
-			}				
-		
+			}
 			
-			var kollisionsDaten:Array = new Array;
+
 			kollisionsDaten.length = 0;
 	
 			for each (var brick:AABB in level.getBricks()) {
 				
 					brick.detectCollision(ball, kollisionsDaten);							
-										
-					if (kollisionsDaten.length) {  // kollision vorhanden
-					   kollisionsDaten.sortOn("distance", Array.NUMERIC); // objekte anhand der entfernung sortieren
-					   
-					   var index:int = level.getBricks().indexOf(brick);				   		
-					   					   
-					   // in kollisionsDaten[0] befindet sich nun das kollisionsobjekt des zuerst getroffenen AABB objektes
-					   
-					   trace("Kollision mit " + kollisionsDaten[0].target + " | Getroffene Seite: " + kollisionsDaten[0].side);
-					   if (kollisionsDaten[0].side == 1) {
-					   		
-					   		removeBrick(index);					   	
-							ball.setXspeed(-(ball.getXspeed()));
-							kollisionsDaten.length = 0;
-							//break;   
-							 
-					   }else if(kollisionsDaten[0].side == 2){
-						
-							removeBrick(index);
-					   		ball.setXspeed(-(ball.getXspeed()));
-					   		kollisionsDaten.length = 0;
-					   		//break;
-					   		
-					   }else if(kollisionsDaten[0].side == 3){
-							
-							removeBrick(index);
-							ball.setYspeed(-(ball.getYspeed()));
-							kollisionsDaten.length = 0;
-							//break;
-					   		
-					   }else if(kollisionsDaten[0].side == 4){
+			}				
+								
+			if (kollisionsDaten.length) {  // kollision vorhanden
+			   
+			   kollisionsDaten.sortOn("distance", Array.NUMERIC); // objekte anhand der entfernung sortieren
+			   
+			   var index:int = level.getBricks().indexOf(kollisionsDaten[0].target);				   		
+			   					   
+			   // in kollisionsDaten[0] befindet sich nun das kollisionsobjekt des zuerst getroffenen AABB objektes
+			   
+			   trace("Kollision mit " + kollisionsDaten[0].target + " | Getroffene Seite: " + kollisionsDaten[0].side);
+			   if (kollisionsDaten[0].side == 1) {
+			   		
+			   		removeBrick(index);					   	
+					ball.setXspeed(-(ball.getXspeed()));
+					 
+			   }else if(kollisionsDaten[0].side == 2){
+				
+					removeBrick(index);
+			   		ball.setXspeed(-(ball.getXspeed()));
+			   		
+			   }else if(kollisionsDaten[0].side == 3){
+					
+					removeBrick(index);
+					ball.setYspeed(-(ball.getYspeed()));
+			   		
+			   }else if(kollisionsDaten[0].side == 4){
 
-							removeBrick(index);
-					   		ball.setYspeed(-(ball.getYspeed()));
-					   		kollisionsDaten.length = 0;
-					   		//break;
-					   }
-					   				   				
-				}
+					removeBrick(index);
+			   		ball.setYspeed(-(ball.getYspeed()));
+			   }					   			
 				
 			}
 		 
@@ -326,24 +328,59 @@ package net.muschko.breax {
 			level.removeChild(brick);
 		}
 		
-		private function prepareNewBall():void {
+		public function prepareNewBall():void {
 			
 			// Neuen Ball vorbereiten
 			TweenMax.to(paddle,0.3,{alpha:1});
 			TweenMax.to(ball,0.3,{alpha:1});
 			
 			ball.setXspeed(0);
-			ball.setYspeed(5);
+			ball.setYspeed(-5);
 			
-			ball.y = 300;
-			ball.x = 310.5;
+			ball.y = ballStartPositionY;
+			ball.x = ballStartPositionX;
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 		}
 		
 		private function levelDone():void {
-			trace("LEVEL DONE");
+
+			// Leven beenden & Neuen Screen aufbauen
+			dispatchEvent(new Event("levelDone"));
+
+		}
+		
+		public function goToNextLevel():void {
+			
+			// Altes Level löschen
+			removeChild(level);
+			
+			// Nächstes Level
+			currentLevel++;
+			
+			// Ball vorbereiten
+			prepareNewBall();
+			
+			level = new Level();
+			
+			// Neues Level erstellen
+			level.createLevel(currentLevel);
+			
+			// Neues Level auf stage platzieren
+			addChild(level);
+			
+			// Level einfaden
+			level.alpha = 0;
+			TweenMax.to(level, 0.5, {alpha: 1});
+		}
+
+		public function getCurrentLevel() : int {
+			return currentLevel;
+		}
+
+		public function setCurrentLevel(currentLevel : int) : void {
+			this.currentLevel = currentLevel;
 		}
 	}
 }
