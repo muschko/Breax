@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+	<!-- Breax Level -->
 	
-	<level name="YOU'RE A BEGINNER">
+	<!-- b0 ( Blank ) -->
+	<!-- b1 ( Blue ) -->
+	<!-- b2 ( Green ) -->
+	<!-- b3 ( Red ) -->
+	<!-- b4 ( Orange ) -->
+	<!-- b5 ( Violet ) -->
+	<!-- b6 ( Unbreakable ) -->
+	<!-- b7 ( Dirt ) -->		
+	
+	<level name="Think you got it">
 		
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick0/><brick0/>
-		<brick0/><brick0/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick2/><brick0/><brick0/>
-		<brick0/><brick0/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick3/><brick0/><brick0/>
-		<brick0/><brick0/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick4/><brick0/><brick0/>
-		<brick0/><brick0/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick0/><brick0/>
-		<brick0/><brick0/><brick6/><brick6/><brick6/><brick6/><brick6/><brick5/><brick5/><brick5/><brick5/><brick5/><brick5/><brick6/><brick6/><brick6/><brick6/><brick6/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
-		<brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/><brick0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b0/><b0/>
+		<b0/><b0/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b2/><b0/><b0/>
+		<b0/><b0/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b3/><b0/><b0/>
+		<b0/><b0/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b4/><b0/><b0/>
+		<b0/><b0/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b5/><b0/><b0/>
+		<b0/><b0/><b6/><b6/><b6/><b6/><b6/><b5/><b5/><b5/><b5/><b5/><b5/><b6/><b6/><b6/><b6/><b6/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
+		<b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/><b0/>
 					
 	</level>
 

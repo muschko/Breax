@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+	<!-- Breax Level -->
 	
-	<level name="YOU'RE A BEGINNER">
+	<!-- b0 ( Blank ) -->
+	<!-- b1 ( Blue ) -->
+	<!-- b2 ( Green ) -->
+	<!-- b3 ( Red ) -->
+	<!-- b4 ( Orange ) -->
+	<!-- b5 ( Violet ) -->
+	<!-- b6 ( Unbreakable ) -->
+	<!-- b7 ( Dirt ) -->
+	
+	<level name="Second chance">
 		
-		<brick0/><brick1/><brick0/><brick1/><brick0/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick2/>
-		<brick2/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick2/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick2/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick7/><brick7/><brick7/><brick7/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/><brick1/>
-		<brick6/><brick6/><brick6/><brick6/><brick6/><brick6/><brick1/><brick1/><brick1/><brick1/><brick6/><brick6/><brick6/><brick6/><brick6/><brick6/><brick6/><brick6/><brick6/><brick6/>
+		<b0/><b1/><b0/><b1/><b0/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b2/>
+		<b2/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b2/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b2/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b7/><b7/><b7/><b7/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/><b1/>
+		<b6/><b6/><b6/><b6/><b6/><b6/><b1/><b1/><b1/><b1/><b6/><b6/><b6/><b6/><b6/><b6/><b6/><b6/><b6/><b6/>
 			
 	</level>
 

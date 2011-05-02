@@ -38,6 +38,7 @@ package net.muschko.breax {
 		private function loadLevelComplete(e:Event):void {
 			levelXML = new XML(e.target.data);
 			levelName = levelXML.attribute("name");
+
 			generateBricks();
 		}
 		
@@ -53,12 +54,12 @@ package net.muschko.breax {
                                                
                 switch(brickType) {
                 	
-                	case "brick0":
+                	case "b0":
                 		// Space
                 		setBrickPosition(i, true);      		
                 		break;
                 		
-                	case "brick1":
+                	case "b1":
                 		// Blau
                 		var brick1:AABB = setBrickPosition(i,false); 
                 		brick1.getBrick().gotoAndStop(1);
@@ -68,7 +69,7 @@ package net.muschko.breax {
                 		pointBricks.push(brick1);                		
                 		break;
                 		
-                	case "brick2":
+                	case "b2":
                 		// Grün
                 		var brick2:AABB = setBrickPosition(i,false); 
                 		brick2.getBrick().gotoAndStop(2);
@@ -77,7 +78,7 @@ package net.muschko.breax {
                 		bricks.push(brick2);
                 		pointBricks.push(brick2);  
                 		break;
-                	case "brick3":
+                	case "b3":
                 		// Rot
                 		var brick3:AABB = setBrickPosition(i,false); 
                 		brick3.getBrick().gotoAndStop(3);
@@ -86,7 +87,7 @@ package net.muschko.breax {
                 		bricks.push(brick3);
                 		pointBricks.push(brick3);  
                 		break;
-                	case "brick4":
+                	case "b4":
                 		// Orange
                 		var brick4:AABB = setBrickPosition(i,false); 
                 		brick4.getBrick().gotoAndStop(4);
@@ -95,7 +96,7 @@ package net.muschko.breax {
                 		bricks.push(brick4);
                 		pointBricks.push(brick4);  
                 		break;
-                	case "brick5":
+                	case "b5":
                 		// Lila
                 		var brick5:AABB = setBrickPosition(i,false); 
                 		brick5.getBrick().gotoAndStop(5);
@@ -104,7 +105,7 @@ package net.muschko.breax {
                 		bricks.push(brick5);
                 		pointBricks.push(brick5);  
                 		break;
-                	case "brick6":
+                	case "b6":
                 		// Unzerstörbar
                 		var brick6:AABB = setBrickPosition(i,false); 
                 		brick6.getBrick().gotoAndStop(6);
@@ -113,7 +114,7 @@ package net.muschko.breax {
                 		// Listen hinzufügen
                 		bricks.push(brick6);
                 		break;
-                	case "brick7":
+                	case "b7":
                 		// Dreck
                 		var brick7:AABB = setBrickPosition(i,false); 
                 		brick7.getBrick().gotoAndStop(7);

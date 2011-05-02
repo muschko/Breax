@@ -1,4 +1,5 @@
 package net.muschko.breax {
+	import flash.text.AntiAliasType;
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -27,6 +28,7 @@ package net.muschko.breax {
 		private var ball:Ball;
 		private var firstKick:Boolean = true;
 		private var currentLevel:int = 1;
+		private var maxLevel:int = 20;
 		private var level:Level;
 		private var background:BackgroundAsset;
 		private var gameTimer:Timer;
@@ -62,11 +64,6 @@ package net.muschko.breax {
 			ball.y = ballStartPositionY;
 			ball.x = ballStartPositionX;
 			
-			//ball.setXspeed(Math.ceil(ball.getSpeed() * Math.cos((300) * Math.PI / 180)));
-			//ball.setYspeed(Math.ceil(ball.getSpeed() * Math.sin((300) * Math.PI / 180)));			
-	
-			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
-			
 			// Leben erstellen
 			for (var i:int = 0; i<= lifes.length -1; i++) {
 				
@@ -100,31 +97,32 @@ package net.muschko.breax {
 			scoreTextField.y = stage.stageHeight - 65;
 			scoreTextField.text = score.toString();
 			
-			addChild(scoreTextField);			
-			
-			//Level erstellten
-			level = new Level();
-			level.alpha = 0;
-			level.createLevel(currentLevel);
-			addChild(level);
-			
-			TweenMax.to(level, 0.5, {alpha: 1});
+			addChild(scoreTextField);				
 			
 			// Levebeschreibung setzen
 			var format2:TextFormat = new TextFormat(); 
-			format2.color = 0x999999; 
-			format2.size = 12;
+			format2.color = 0x666666; 
+			format2.size = 11;
 			format2.font = "Helvetica";
 			
 			levelNameTextField.defaultTextFormat = format2;
 			levelNameTextField.x = 12;
 			levelNameTextField.y = stage.stageHeight - 80;
 			levelNameTextField.autoSize = TextFieldAutoSize.LEFT;
+
+			addChild(levelNameTextField);		
 			
-			trace("Level: " + level.getLevelName());
-			addChild(levelNameTextField);
+			//Level erstellten
+			level = new Level();
+			level.alpha = 0;
+			level.createLevel(currentLevel);
+						
+			level.addEventListener(Event.ADDED, setLevelName);
 			
+			addChild(level);
 			
+			TweenMax.to(level, 0.5, {alpha: 1});
+						
 			// First kick
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
@@ -132,23 +130,23 @@ package net.muschko.breax {
 			this.addEventListener("lostLife", lifeLost);		
 		}
 		
+		private function setLevelName(e:Event):void {
+			levelNameTextField.text = level.getLevelName().toString();	
+		}
+		
 		private function kickBall(e:Event):void {
+			
 			firstKick = false;
-			ball.removeEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
 			gameTimer=new Timer(15);
 			gameTimer.addEventListener(TimerEvent.TIMER, frameScript);
-			gameTimer.start();			
-		}
-		
-		private function placeBallonPaddle(e:Event):void {
-			
-			levelNameTextField.text = level.getLevelName().toString();
-		}
-		
-		private function frameScript(e:Event):void {
+			gameTimer.start();	
 					
+		}		
+		
+		private function frameScript(e:Event):void {			
+			
 			// Ballbewegung
 			ball.x = Math.round(ball.x + ball.getXspeed());
 			ball.y = Math.round(ball.y + ball.getYspeed());			
@@ -342,7 +340,6 @@ package net.muschko.breax {
 			ball.x = ballStartPositionX;
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
-			ball.addEventListener(Event.ENTER_FRAME, placeBallonPaddle);
 		}
 		
 		private function levelDone():void {
@@ -367,6 +364,8 @@ package net.muschko.breax {
 			
 			// Neues Level erstellen
 			level.createLevel(currentLevel);
+			
+			level.addEventListener(Event.ADDED, setLevelName);
 			
 			// Neues Level auf stage platzieren
 			addChild(level);

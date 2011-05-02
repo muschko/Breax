@@ -22,14 +22,14 @@ package net.muschko.breax {
 				if (stage.mouseX < stage.stageWidth - this.width/2) {			
 					this.x += (endX - this.x - this.width/2) / friction;				
 				} else {
-					this.x += ((stage.stageWidth - this.width/2) - this.x - this.width/2) / friction;			
+					this.x += ((stage.stageWidth - this.width/2) - this.x) / friction;			
 				}
 			}
 			else {
 				if (stage.mouseX > this.width/2) {			
-					this.x += (endX - this.x - this.width/2) / friction;	
+					this.x += (endX - this.x) / friction;	
 				} else {
-					this.x += ((this.width/2) - this.x - this.width/2) / friction;			
+					this.x += ((this.width/2) - this.x) / friction;			
 				}
 			}
 			
