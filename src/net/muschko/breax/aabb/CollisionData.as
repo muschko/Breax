@@ -1,16 +1,15 @@
-package net.muschko.breax.aabb 
+package net.muschko.breax.aabb
 {
 	public class CollisionData
 	{
-	    public var target:AABB;     // das getroffene objekt
-	    public var side:int;        // getroffene kante
-	    public var x:int, y:int;    // schnittpunkt
-	    public var distance:Number; // zurückgelegte distanz
-	        
-	    public function CollisionData(_target:AABB, _x:int, _y:int) {
-	        target = _target;
-	        x      = _x;
-	        y      = _y;
-	    }
+		public var target:Bounds;
+		public var x:Number;
+		public var y:Number;
+		public var side:uint;
+		public var distance:Number;
+			
+		public function CollisionData(target:Bounds = null) {
+			this.target = target;
+		}
 	}
 }
