@@ -1,8 +1,12 @@
 package net.muschko.breax.aabb
 {
+	import net.muschko.breax.Brick;
+	import net.muschko.breax.aabb.Bounds;
+	
 	public class AABB extends Bounds
 	{
 		public var inverted:Boolean;
+		private var brick:Brick;
 		
 		public function AABB(x:Number, y:Number, width:Number, height:Number, inverted:Boolean = false) {
 			this.inverted = inverted;
@@ -27,6 +31,15 @@ package net.muschko.breax.aabb
 			
 			return collide;
 		}
+		
+		public function getBrick() : Brick {
+			return brick;
+		}
+
+		public function setBrick(brick : Brick) : void {
+			this.brick = brick;
+		}
+		
 	}
 }
 

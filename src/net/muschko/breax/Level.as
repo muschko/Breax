@@ -5,6 +5,7 @@ package net.muschko.breax {
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import net.muschko.breax.aabb.AABB;
+	import net.muschko.breax.Brick;
 	
 	/**
 	 * Ein Level für Breax

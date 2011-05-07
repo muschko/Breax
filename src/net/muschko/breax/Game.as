@@ -1,17 +1,17 @@
 package net.muschko.breax {
-	import flash.text.AntiAliasType;
+
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import net.muschko.breax.aabb.AABB;
+	import net.muschko.breax.Ball;
+	import net.muschko.breax.Level;
 	
 	/**
 	 * GameEngine für Brix
@@ -215,25 +215,22 @@ package net.muschko.breax {
 			   
 			   var index:int = level.getBricks().indexOf(kollisionsDaten[0].target);				   		
 			   					   
-			   // in kollisionsDaten[0] befindet sich nun das kollisionsobjekt des zuerst getroffenen AABB objektes
-			   
-			   trace("Kollision mit " + kollisionsDaten[0].target + " | Getroffene Seite: " + kollisionsDaten[0].side);
-			   if (kollisionsDaten[0].side == 1) {
+			   if (kollisionsDaten[0].side == 2) {
 			   		
 			   		removeBrick(index);					   	
 					ball.setXspeed(-(ball.getXspeed()));
 					 
-			   }else if(kollisionsDaten[0].side == 2){
+			   }else if(kollisionsDaten[0].side == 3){
 				
 					removeBrick(index);
 			   		ball.setXspeed(-(ball.getXspeed()));
 			   		
-			   }else if(kollisionsDaten[0].side == 3){
+			   }else if(kollisionsDaten[0].side == 1){
 					
 					removeBrick(index);
 					ball.setYspeed(-(ball.getYspeed()));
 			   		
-			   }else if(kollisionsDaten[0].side == 4){
+			   }else if(kollisionsDaten[0].side == 0){
 
 					removeBrick(index);
 			   		ball.setYspeed(-(ball.getYspeed()));
