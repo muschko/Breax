@@ -31,10 +31,9 @@ package net.muschko.breax {
 		private var maxLevel:int = 20;
 		private var level:Level;
 		private var background:BackgroundAsset;
-		private var gameTimer:Timer;
 		private var kollisionsDaten:Array = new Array;
 		private var ballStartPositionY:int = 400;
-		private var ballStartPositionX:int = 310;
+		private var ballStartPositionX:int = 322.5;
 					
 		public function Game() {
 		}
@@ -59,7 +58,7 @@ package net.muschko.breax {
 			addChild(ball);
 			
 			ball.setXspeed(0);
-			ball.setYspeed(-5);
+			ball.setYspeed(0);
 			
 			ball.y = ballStartPositionY;
 			ball.x = ballStartPositionX;
@@ -127,10 +126,13 @@ package net.muschko.breax {
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
 			// Listener für Lebensverlust
-			this.addEventListener("lostLife", lifeLost);		
+			this.addEventListener("lostLife", lifeLost);	
+			
+			addEventListener(Event.ENTER_FRAME, frameScript);	
 		}
 		
 		private function setLevelName(e:Event):void {
+			level.removeEventListener(Event.ADDED, setLevelName);
 			levelNameTextField.text = level.getLevelName().toString();	
 		}
 		
@@ -139,17 +141,18 @@ package net.muschko.breax {
 			firstKick = false;
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
-			gameTimer=new Timer(15);
-			gameTimer.addEventListener(TimerEvent.TIMER, frameScript);
-			gameTimer.start();	
-					
+			ball.setXspeed(0);
+			ball.setYspeed(-5);			
+				
 		}		
 		
 		private function frameScript(e:Event):void {			
 			
 			// Ballbewegung
-			ball.x = Math.round(ball.x + ball.getXspeed());
-			ball.y = Math.round(ball.y + ball.getYspeed());			
+			ball.x = ball.x + ball.getXspeed();
+			ball.y = ball.y + ball.getYspeed();	
+			
+			paddle.movePaddle();		
 						
 			// Spielfeldbegrenzung		
 			if (ball.x >= stage.stageWidth - ball.width ) {
@@ -172,8 +175,7 @@ package net.muschko.breax {
 			} else if (ball.y >= stage.stageHeight + ball.height) {
 				
 				// Leben verlieren
-				gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
-				gameTimer.stop();
+				removeEventListener(Event.ENTER_FRAME, frameScript);
 				dispatchEvent(new Event("lostLife"));
 			} 
 			
@@ -197,8 +199,8 @@ package net.muschko.breax {
 					ball.setXspeed(ball.getXspeed() + (ball.x - paddle.x) * 0.05);
 				}
 				
-				ball.x = Math.round(ball.x + ball.getXspeed());
-				ball.y = Math.round(ball.y + ball.getYspeed());
+				ball.x = ball.x + ball.getXspeed();
+				ball.y = ball.y + ball.getYspeed();
 			}
 			
 
@@ -206,7 +208,7 @@ package net.muschko.breax {
 	
 			for each (var brick:AABB in level.getBricks()) {
 				
-					brick.detectCollision(ball, kollisionsDaten);							
+				brick.detectCollision(ball, kollisionsDaten);							
 			}				
 								
 			if (kollisionsDaten.length) {  // kollision vorhanden
@@ -255,8 +257,7 @@ package net.muschko.breax {
 			} else {
 				scoreTextField.text = "";
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
-				gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
-				gameTimer.stop();
+				removeEventListener(Event.ENTER_FRAME, frameScript);
 				paddle.destroy();
 				removeChild(ball);
 				dispatchEvent(new Event("gameover"));
@@ -282,8 +283,7 @@ package net.muschko.breax {
 									
 				// Level geschafft
 				if (level.getPointBricks().length == 0) {
-					gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
-					gameTimer.stop();
+					removeEventListener(Event.ENTER_FRAME, frameScript);
 					levelDone();
 					return;							
 				}					
@@ -306,8 +306,7 @@ package net.muschko.breax {
 
 					// Level geschafft
 					if (level.getPointBricks().length == 0) {
-						gameTimer.removeEventListener(TimerEvent.TIMER, frameScript);
-						gameTimer.stop();
+						removeEventListener(Event.ENTER_FRAME, frameScript);
 						levelDone();
 					}					
 				 }						 
@@ -331,10 +330,12 @@ package net.muschko.breax {
 			TweenMax.to(ball,0.3,{alpha:1});
 			
 			ball.setXspeed(0);
-			ball.setYspeed(-5);
+			ball.setYspeed(0);
 			
 			ball.y = ballStartPositionY;
 			ball.x = ballStartPositionX;
+			
+			addEventListener(Event.ENTER_FRAME, frameScript);
 			
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 		}

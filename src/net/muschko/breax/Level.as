@@ -167,11 +167,14 @@ package net.muschko.breax {
 	    		}    		
 	    		
 	    		brick.x = brick.getPositionX();
-	    		brick.y = brick.getPositionY();	    		
+	    		brick.y = brick.getPositionY();	 
+	    		
+	    		brick.cacheAsBitmap = true;
+	    		   		
 	    		addChild(brick);
 	    		
 	    		// Schatten
-	    		TweenMax.to(brick, 1, {dropShadowFilter:{blurX:5, blurY:5, distance:0, alpha:0.5}}); 
+	    		TweenMax.to(brick, 0, {dropShadowFilter:{blurX:3, blurY:3, distance:0}}); 
 	    		
 	    		var brickAABB:AABB = new AABB(brick.x + 15 , brick.y + 10 , 35 , 20 );
 	    		

@@ -11,10 +11,9 @@ package net.muschko.breax {
 		static private const friction:int = 5;
 		
 		public function Paddle() {
-			this.addEventListener(Event.ENTER_FRAME, movePaddle);
 		}
 		
-		public function movePaddle(e:Event):void {
+		public function movePaddle():void {
 
 			var endX:int = stage.mouseX;
 						
