@@ -39,7 +39,7 @@ package net.muschko.breax {
 		private function loadLevelComplete(e:Event):void {
 			levelXML = new XML(e.target.data);
 			levelName = levelXML.attribute("name");
-
+		
 			generateBricks();
 		}
 		
@@ -176,7 +176,7 @@ package net.muschko.breax {
 	    		// Schatten
 	    		TweenMax.to(brick, 0, {dropShadowFilter:{blurX:3, blurY:3, distance:0}}); 
 	    		
-	    		var brickAABB:AABB = new AABB(brick.x + 15 , brick.y + 10 , 35 , 20 );
+	    		var brickAABB:AABB = new AABB(brick.x+brick.width/2, brick.y+2 , 40 , 30 );
 	    		
 	    		brickAABB.setBrick(brick);	
 	    			    		

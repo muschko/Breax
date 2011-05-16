@@ -1,5 +1,9 @@
 package net.muschko.breax {
-
+	import flash.media.SoundTransform;
+	import flash.net.URLRequest;
+	import flash.media.SoundChannel;
+	import flash.media.Sound;
+	import flash.ui.Mouse;
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -34,11 +38,34 @@ package net.muschko.breax {
 		private var kollisionsDaten:Array = new Array;
 		private var ballStartPositionY:int = 400;
 		private var ballStartPositionX:int = 322.5;
+		
+		private var paddleSound:Sound = new Sound();
+		private var boundingSound:Sound = new Sound();
+		private var brickSound:Sound = new Sound();
+		private var dirtSound:Sound = new Sound();
+		private var lostLifeSound:Sound = new Sound();
+		private var metalSound:Sound = new Sound();
+		
+		private var sndChannel:SoundChannel = new SoundChannel();
+		private var sndTransform:SoundTransform = new SoundTransform();
 					
 		public function Game() {
 		}
 		
 		public function init():void {
+			
+			Mouse.hide();
+			
+			// Loading Sounds
+			paddleSound.load(new URLRequest("sound/paddle2.mp3"));
+			boundingSound.load(new URLRequest("sound/brick3.mp3"));
+			brickSound.load(new URLRequest("sound/brick4.mp3"));
+			dirtSound.load(new URLRequest("sound/dirt2.mp3"));
+			lostLifeSound.load(new URLRequest("sound/life3.mp3"));
+			metalSound.load(new URLRequest("sound/metal.mp3"));
+			
+			// Setting Volume
+			sndTransform.volume = 0.05;
 			
 			// Background
 			background = new BackgroundAsset();
@@ -116,8 +143,7 @@ package net.muschko.breax {
 			level.alpha = 0;
 			level.createLevel(currentLevel);
 						
-			level.addEventListener(Event.ADDED, setLevelName);
-			
+			level.addEventListener(Event.ADDED, setLevelName);			
 			addChild(level);
 			
 			TweenMax.to(level, 0.5, {alpha: 1});
@@ -132,8 +158,7 @@ package net.muschko.breax {
 		}
 		
 		private function setLevelName(e:Event):void {
-			level.removeEventListener(Event.ADDED, setLevelName);
-			levelNameTextField.text = level.getLevelName().toString();	
+			levelNameTextField.text = level.getLevelName().toString();
 		}
 		
 		private function kickBall(e:Event):void {
@@ -152,10 +177,13 @@ package net.muschko.breax {
 			ball.x = ball.x + ball.getXspeed();
 			ball.y = ball.y + ball.getYspeed();	
 			
+			// Paddlebewgung
 			paddle.movePaddle();		
 						
 			// Spielfeldbegrenzung		
 			if (ball.x >= stage.stageWidth - ball.width ) {
+				
+				sndChannel = boundingSound.play(0,1,sndTransform);				
 				
 				ball.x = stage.stageWidth - ball.width;
 				ball.setXspeed(-(ball.getXspeed()));
@@ -163,12 +191,16 @@ package net.muschko.breax {
 			}
 			else if(ball.x <= 0) {
 				
+				sndChannel = boundingSound.play(0,1,sndTransform);				
+							
 				ball.x = 0;
 				ball.setXspeed(-(ball.getXspeed()));
 			
 			}						
 			else if (ball.y <= 0) {
 				
+				sndChannel = boundingSound.play(0,1,sndTransform);				
+								
 				ball.y = ball.height;
 				ball.setYspeed(-(ball.getYspeed()));
 				
@@ -180,10 +212,8 @@ package net.muschko.breax {
 			} 
 			
 			if (paddle.hitTestObject(ball)) {
-			
-				// 5 Punkte für Pedal
-				score = score + 5;
-				scoreTextField.text = score.toString(); 
+				
+				sndChannel = paddleSound.play(0,1,sndTransform);				
 				 
 				if (ball.getYspeed()>0) {
 					
@@ -212,6 +242,8 @@ package net.muschko.breax {
 			}				
 								
 			if (kollisionsDaten.length) {  // kollision vorhanden
+			
+			   // Sound abspielen
 			   
 			   kollisionsDaten.sortOn("distance", Array.NUMERIC); // objekte anhand der entfernung sortieren
 			   
@@ -249,12 +281,14 @@ package net.muschko.breax {
 			TweenMax.to(ball,0.3,{alpha:0});
 			stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 			
-			// Check ob noch genug Leben verfügbar sind
+			// Checkt ob noch genug Leben verfügbar sind
 			if (lifes.length != 0) {
 				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewBall});
 				lifes.splice(lifes.length-1);
 				trace(lifes.length);
+				sndChannel = lostLifeSound.play(0,1,sndTransform);
 			} else {
+				sndChannel = lostLifeSound.play(0,1,sndTransform);
 				scoreTextField.text = "";
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 				removeEventListener(Event.ENTER_FRAME, frameScript);
@@ -271,7 +305,9 @@ package net.muschko.breax {
 			
 			// Wenn der Ball einen zerstörbaren Stein trifft						
 			if (brick.getBrick().getDestructable()) {					
-										
+				
+				sndChannel = brickSound.play(0,1,sndTransform);
+								
 				// Stein entfernen
 				TweenMax.to(brick.getBrick(), 0.5, {alpha: 0, y: brick.getBrick().y+10, rotation: Math.random()*20, onComplete:removeBrickChild, onCompleteParams:[brick.getBrick()]});						
 				level.getBricks().splice(level.getBricks().indexOf(brick),1);
@@ -290,7 +326,9 @@ package net.muschko.breax {
 			} 
 			// Wenn der Ball einen brechbaren Stein trifft
 			else if ( brick.getBrick().getBreakable() ) {
-				 						 
+				
+				 sndChannel = dirtSound.play(0,1,sndTransform);
+								 						 
 				 if (brick.getBrick().currentFrame == 7) {
 				 	// Anderen Sprite anzeigen "brüchigen Stein"
 				 	brick.getBrick().gotoAndStop(8);
@@ -313,7 +351,7 @@ package net.muschko.breax {
 			}
 			// Stein ist nicht zerstörbar!					
 			else {
-				// Ball abprallen lassen
+				sndChannel = metalSound.play(0,1,sndTransform);
 			}
 										
 				
