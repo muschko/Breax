@@ -128,12 +128,12 @@ package net.muschko.breax {
 			// Levebeschreibung setzen
 			var format2:TextFormat = new TextFormat(); 
 			format2.color = 0x666666; 
-			format2.size = 11;
-			format2.font = "Helvetica";
+			format2.size = 8;
+			format2.font = "Semplice Regular";
 			
 			levelNameTextField.defaultTextFormat = format2;
 			levelNameTextField.x = 12;
-			levelNameTextField.y = stage.stageHeight - 80;
+			levelNameTextField.y = stage.stageHeight - 90;
 			levelNameTextField.autoSize = TextFieldAutoSize.LEFT;
 
 			addChild(levelNameTextField);		
@@ -158,7 +158,7 @@ package net.muschko.breax {
 		}
 		
 		private function setLevelName(e:Event):void {
-			levelNameTextField.text = level.getLevelName().toString();
+			levelNameTextField.text = "LEVEL: " + level.getLevelName().toString();
 		}
 		
 		private function kickBall(e:Event):void {
