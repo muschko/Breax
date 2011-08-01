@@ -38,6 +38,7 @@ package net.muschko.breax {
 		private var kollisionsDaten:Array = new Array;
 		private var ballStartPositionY:int = 400;
 		private var ballStartPositionX:int = 322.5;
+		private var scoreMC:MovieClip = new MovieClip();
 		
 		private var paddleSound:Sound = new Sound();
 		private var boundingSound:Sound = new Sound();
@@ -111,6 +112,10 @@ package net.muschko.breax {
 			
 			// Score & Levelname erstellen
 			scoreTextField = new TextField();
+			scoreTextField.embedFonts = true;
+			scoreMC.addChild(scoreTextField);
+			addChild(scoreMC);
+			
 			levelNameTextField = new TextField();
 			
 			var format1:TextFormat = new TextFormat(); 
@@ -118,12 +123,10 @@ package net.muschko.breax {
 			format1.size = 20;
 			format1.font = "Helvetica";			
 			
-			scoreTextField.defaultTextFormat = format1;
-			scoreTextField.x = 12;
-			scoreTextField.y = stage.stageHeight - 65;
-			scoreTextField.text = score.toString();
-			
-			addChild(scoreTextField);				
+			(scoreMC.getChildAt(0) as TextField).defaultTextFormat = format1;
+			scoreMC.x = 12;
+			scoreMC.y = stage.stageHeight - 65;
+			(scoreMC.getChildAt(0) as TextField).text = score.toString();
 			
 			// Levebeschreibung setzen
 			var format2:TextFormat = new TextFormat(); 
@@ -131,11 +134,12 @@ package net.muschko.breax {
 			format2.size = 8;
 			format2.font = "Semplice Regular";
 			
+			
 			levelNameTextField.defaultTextFormat = format2;
 			levelNameTextField.x = 12;
 			levelNameTextField.y = stage.stageHeight - 90;
 			levelNameTextField.autoSize = TextFieldAutoSize.LEFT;
-
+	
 			addChild(levelNameTextField);		
 			
 			//Level erstellten
@@ -283,13 +287,15 @@ package net.muschko.breax {
 			
 			// Checkt ob noch genug Leben verfügbar sind
 			if (lifes.length != 0) {
+				
 				TweenMax.to(lifes[lifes.length-1], 0.5, {alpha: 0, y: lifes[lifes.length-1].y+10, rotation: 20, onComplete: prepareNewBall});
 				lifes.splice(lifes.length-1);
-				trace(lifes.length);
 				sndChannel = lostLifeSound.play(0,1,sndTransform);
+				
 			} else {
+				
 				sndChannel = lostLifeSound.play(0,1,sndTransform);
-				scoreTextField.text = "";
+				(scoreMC.getChildAt(0) as TextField).text = "";
 				stage.removeEventListener(MouseEvent.MOUSE_DOWN, kickBall);
 				removeEventListener(Event.ENTER_FRAME, frameScript);
 				paddle.destroy();
@@ -315,7 +321,9 @@ package net.muschko.breax {
 				
 				// Punkte hinzufügen
 				score = score + brick.getBrick().getScore();
-				scoreTextField.text = score.toString();	
+				(scoreMC.getChildAt(0) as TextField).text = score.toString();	
+				TweenMax.to(scoreMC, 0.2, {scaleX: 1.2, scaleY: 1.2, tint:0x33aabb});
+				TweenMax.to(scoreMC, 0.2, {scaleX: 1, scaleY: 1, delay:0.2, tint:0x333333});
 									
 				// Level geschafft
 				if (level.getPointBricks().length == 0) {
@@ -340,7 +348,9 @@ package net.muschko.breax {
 										
 					// Punkte hinzufügen
 					score = score + brick.getBrick().getScore();
-					scoreTextField.text = score.toString();	
+					(scoreMC.getChildAt(0) as TextField).text = score.toString();
+					TweenMax.to(scoreMC, 0.2, {scaleX: 1.2, scaleY: 1.2, tint:0x33aabb});
+					TweenMax.to(scoreMC, 0.2, {scaleX: 1, scaleY: 1, delay:0.2, tint:0x333333});
 
 					// Level geschafft
 					if (level.getPointBricks().length == 0) {
