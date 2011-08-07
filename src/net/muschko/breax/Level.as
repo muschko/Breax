@@ -1,4 +1,9 @@
 package net.muschko.breax {
+	import net.muschko.breax.specials.SpecialExtraLife;
+	import net.muschko.breax.specials.SpecialDeath;
+	import net.muschko.breax.specials.SpecialShort;
+	import net.muschko.breax.specials.SpecialLong;
+	import net.muschko.breax.specials.SpecialPoints;
 	import com.greensock.TweenMax;
 	import flash.display.MovieClip;
 	import flash.events.Event;
@@ -23,6 +28,11 @@ package net.muschko.breax {
 		private var rowCounter:int = 0;
 		private var rowBreak:Boolean;
 		private var levelName:String = new String();
+		private var specialPoints:Number;
+		private var specialLong:Number;
+		private var specialShort:Number;
+		private var specialDeath:Number;
+		private var specialExtraLife:Number;
 		private var currentBrickPosition:int = 1;
 		private var brickPaddingX:int = 1;
 		private var brickPaddingY:int = 1;
@@ -37,8 +47,14 @@ package net.muschko.breax {
 		}
 		
 		private function loadLevelComplete(e:Event):void {
+			
 			levelXML = new XML(e.target.data);
 			levelName = levelXML.attribute("name");
+			specialPoints = new Number (levelXML.attribute("specialPoints"));
+			specialLong = new Number (levelXML.attribute("specialLong"));
+			specialShort = new Number (levelXML.attribute("specialShort"));
+			specialDeath = new Number (levelXML.attribute("specialDeath"));
+			specialExtraLife = new Number (levelXML.attribute("specialExtraLife"));
 		
 			generateBricks();
 		}
@@ -130,9 +146,39 @@ package net.muschko.breax {
            
                 }                    		    					
 				rowCounter = rowCounter + 1;
-            } 			
-			trace("Anzahl: "+pointBricks.length);
+            }			
 			
+			// Specials setzen
+			setBrickSpecials("points", specialPoints);
+			setBrickSpecials("long", specialLong);
+			setBrickSpecials("short", specialShort);
+			setBrickSpecials("death", specialDeath);
+			setBrickSpecials("extraLife", specialExtraLife);
+			
+		}
+		
+		private function setBrickSpecials(special:String, amount:Number):void {
+			
+			for (var i:int = 0; i <= amount-1; i++) {
+				
+				var randomIndex:Number = Math.round(Math.random()*pointBricks.length);
+
+				var brickWithSpecial:AABB = pointBricks[randomIndex];
+				
+				if (brickWithSpecial.getBrick().special == null) {
+					if ( special == "points") {
+						brickWithSpecial.getBrick().special = new SpecialPoints();
+					} else if (special == "long") {
+						brickWithSpecial.getBrick().special = new SpecialLong();					
+					} else if (special == "short") {
+						brickWithSpecial.getBrick().special = new SpecialShort();					
+					} else if (special == "death") {
+						brickWithSpecial.getBrick().special = new SpecialDeath();					
+					} else if (special == "extraLife") {
+						brickWithSpecial.getBrick().special = new SpecialExtraLife();					
+					}
+				}
+			}
 		}
 		
 		private function setBrickPosition(counter:int,blankBrick:Boolean):AABB {
@@ -176,7 +222,7 @@ package net.muschko.breax {
 	    		// Schatten
 	    		TweenMax.to(brick, 0, {dropShadowFilter:{blurX:3, blurY:3, distance:0}}); 
 	    		
-	    		var brickAABB:AABB = new AABB(brick.x+brick.width/2, brick.y+2 , 40 , 30 );
+	    		var brickAABB:AABB = new AABB(brick.x+brick.width/2-10, brick.y+4  , 40 , 30 );
 	    		
 	    		brickAABB.setBrick(brick);	
 	    			    		

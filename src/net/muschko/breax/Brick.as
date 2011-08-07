@@ -1,4 +1,5 @@
 package net.muschko.breax {
+	import net.muschko.breax.specials.Special;
 
 	/**
 	 * Repräsentiert einen Brick-Stein
@@ -13,6 +14,7 @@ package net.muschko.breax {
 		private var positionX:int;
 		private var positionY:int;
 		private var score:int;
+		private var _special:Special;
 		
 		public function Brick() {
 		}
@@ -64,6 +66,15 @@ package net.muschko.breax {
 		public function setBreakable(breakable : Boolean) : void {
 			this.breakable = breakable;
 		}
+
+		public function get special() : Special {
+			return _special;
+		}
+
+		public function set special(special : Special) : void {
+			_special = special;
+		}
+
 		
 		
 	}

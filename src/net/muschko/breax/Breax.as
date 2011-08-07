@@ -1,6 +1,5 @@
-﻿package 
-net.muschko.breax {
-	import com.greensock.plugins.TintPlugin;
+﻿package net.muschko.breax {
+	
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
 	import flash.media.SoundChannel;
